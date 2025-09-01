@@ -1,4 +1,5 @@
-/* Typography styles - plugin loaded in tailwind.css */
+@plugin "@tailwindcss/typography";
+
 @layer base {
   /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
@@ -92,11 +93,22 @@
 
   /* ===== Code Blocks & Syntax Highlighting ===== */
   .astro-code {
-    @apply flex border bg-(--shiki-light-bg) text-(--shiki-light) outline-border [&_span]:text-(--shiki-light);
+    @apply flex border outline-border;
+    background-color: var(--shiki-light-bg);
+    color: var(--shiki-light);
+  }
+
+  .astro-code span {
+    color: var(--shiki-light);
   }
 
   html[data-theme="dark"] .astro-code {
-    @apply bg-(--shiki-dark-bg) text-(--shiki-dark) [&_span]:text-(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
+    color: var(--shiki-dark);
+  }
+
+  html[data-theme="dark"] .astro-code span {
+    color: var(--shiki-dark);
   }
 
   /* Styles for Shiki transformers */
