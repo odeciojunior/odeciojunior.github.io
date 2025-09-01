@@ -45,7 +45,6 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : `/${localeSlug}/
     if (!pageFindSearch) return;
 
     const params = new URLSearchParams(window.location.search);
-    const locale = pageFindSearch.dataset.locale || 'en';
 
     const onIdle = window.requestIdleCallback || (cb => setTimeout(cb, 1));
 

@@ -14,7 +14,9 @@
     "home": "Início",
     "search": "Buscar",
     "close": "Fechar",
-    "open": "Abrir"
+    "open": "Abrir",
+    "skipToContent": "Pular para o conteúdo",
+    "pageOf": "{{current}} / {{total}}"
   },
   "navigation": {
     "home": "Início",
@@ -23,7 +25,8 @@
     "contact": "Contato",
     "archive": "Arquivo",
     "categories": "Categorias",
-    "tags": "Tags"
+    "tags": "Tags",
+    "menu": "Menu"
   },
   "blog": {
     "title": "Blog",

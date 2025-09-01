@@ -4,7 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import IconArrowLeft from "@/assets/icons/IconArrowLeft.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import LinkButton from "./LinkButton.astro";
-import { getLanguageFromURL } from "@/i18n/utils";
+import { getLanguageFromURL, createTranslator } from "@/i18n/utils";
 
 export interface Props {
   page: Page<CollectionEntry<"blog">>;
@@ -16,6 +16,7 @@ const { page, locale } = Astro.props;
 // Get current language
 const currentLanguage = Astro.locals.currentLanguage || getLanguageFromURL(Astro.url.pathname);
 const localeSlug = locale || (currentLanguage === 'en-US' ? 'en' : currentLanguage === 'pt-BR' ? 'pt' : currentLanguage);
+const t = createTranslator(currentLanguage);
 
 // Update pagination URLs to include locale
 const prevUrl = page.url.prev ? `/${localeSlug}${page.url.prev}` : null;
@@ -29,19 +30,19 @@ const nextUrl = page.url.next ? `/${localeSlug}${page.url.next}` : null;
         disabled={!prevUrl}
         href={prevUrl as string}
         class:list={["me-4 select-none", { "opacity-50": !prevUrl }]}
-        ariaLabel="Previous"
+        ariaLabel={t('common.previous')}
       >
         <IconArrowLeft class="inline-block rtl:rotate-180" />
-        Prev
+        {t('common.previous')}
       </LinkButton>
-      {page.currentPage} / {page.lastPage}
+      {t('common.pageOf', { current: page.currentPage, total: page.lastPage })}
       <LinkButton
         disabled={!nextUrl}
         href={nextUrl as string}
         class:list={["ms-4 select-none", { "opacity-50": !nextUrl }]}
-        ariaLabel="Next"
+        ariaLabel={t('common.next')}
       >
-        Next
+        {t('common.next')}
         <IconArrowRight class="inline-block rtl:rotate-180" />
       </LinkButton>
     </nav>

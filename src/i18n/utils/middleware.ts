@@ -4,15 +4,46 @@ import {
   type Language 
 } from '../config';
 import { 
-  getLanguageFromURL, 
-  addLanguagePrefix, 
   detectLanguage,
   isSupportedLanguage 
 } from './index';
 
+// Legacy routes that need to be redirected to locale-prefixed versions
+const LEGACY_ROUTES = [
+  '/posts',
+  '/about', 
+  '/tags',
+  '/archives',
+  '/search',
+  '/404'
+] as const;
+
+// Dynamic legacy route patterns
+const LEGACY_DYNAMIC_PATTERNS = [
+  /^\/posts\/(.+)$/,        // /posts/slug or /posts/page/1
+  /^\/tags\/([^\/]+)$/,     // /tags/tag-name
+  /^\/tags\/([^\/]+)\/(.+)$/ // /tags/tag-name/page/1
+] as const;
+
 /**
- * Middleware function to handle i18n routing
+ * Check if a pathname matches any legacy route patterns
+ */
+function isLegacyRoute(pathname: string): boolean {
+  // Check static legacy routes
+  if (LEGACY_ROUTES.includes(pathname as any)) {
+    return true;
+  }
+  
+  // Check dynamic legacy route patterns
+  return LEGACY_DYNAMIC_PATTERNS.some(pattern => pattern.test(pathname));
+}
+
+/**
+ * Middleware function to handle i18n routing and legacy route redirects
  * This should be used in Astro middleware
+ * 
+ * Note: With prefixDefaultLocale: false, default language (en-US) has no prefix
+ * while pt-BR uses /pt prefix
  */
 export function i18nMiddleware(request: Request): Response | void {
   const url = new URL(request.url);
@@ -22,34 +53,71 @@ export function i18nMiddleware(request: Request): Response | void {
   if (
     pathname.startsWith('/_astro/') ||
     pathname.startsWith('/api/') ||
-    pathname.includes('.') // Skip files with extensions
+    pathname.includes('.') || // Skip files with extensions
+    pathname.startsWith('/robots.txt') ||
+    pathname.startsWith('/sitemap') ||
+    pathname.startsWith('/rss.xml') ||
+    pathname.startsWith('/og.png')
   ) {
     return;
   }
   
-  const currentLang = getLanguageFromURL(pathname);
-  
-  // If no language prefix is detected, redirect to the appropriate language
-  if (currentLang === DEFAULT_LANGUAGE && !pathname.startsWith('/en')) {
-    const detectedLang = detectLanguage(pathname);
-    const newPathname = addLanguagePrefix(pathname, detectedLang);
-    
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: `${url.origin}${newPathname}${url.search}${url.hash}`,
-      },
-    });
+  // Check if pathname starts with Portuguese prefix
+  if (pathname.startsWith('/pt')) {
+    return; // Already has Portuguese locale, let Astro handle it
   }
   
-  // If unsupported language, redirect to default
-  if (!isSupportedLanguage(currentLang)) {
-    const newPathname = addLanguagePrefix(pathname.replace(/^\/[^\/]+/, ''), DEFAULT_LANGUAGE);
+  // Check if it's a legacy route (exists in both pages/ and pages/[locale]/)
+  // These should redirect based on browser/stored language preference
+  if (isLegacyRoute(pathname)) {
+    const detectedLang = detectLanguage(pathname);
+    
+    // If detected language is Portuguese, redirect to /pt prefix
+    if (detectedLang === 'pt-BR') {
+      const newPathname = `/pt${pathname}`;
+      
+      return new Response(null, {
+        status: 301, // Permanent redirect for SEO
+        headers: {
+          Location: `${url.origin}${newPathname}${url.search}${url.hash}`,
+        },
+      });
+    }
+    
+    // For English (default), no redirect needed - serve from pages/ directly
+    return;
+  }
+  
+  // Handle dynamic legacy routes (like /posts/slug, /tags/tag-name)
+  const isDynamicLegacy = LEGACY_DYNAMIC_PATTERNS.some(pattern => pattern.test(pathname));
+  if (isDynamicLegacy) {
+    const detectedLang = detectLanguage(pathname);
+    
+    // If detected language is Portuguese, redirect to /pt prefix
+    if (detectedLang === 'pt-BR') {
+      const newPathname = `/pt${pathname}`;
+      
+      return new Response(null, {
+        status: 301, // Permanent redirect for SEO
+        headers: {
+          Location: `${url.origin}${newPathname}${url.search}${url.hash}`,
+        },
+      });
+    }
+    
+    // For English (default), no redirect needed
+    return;
+  }
+  
+  // Handle unsupported language prefixes (anything that's not /pt)
+  const pathSegments = pathname.split('/').filter(Boolean);
+  if (pathSegments.length > 0 && pathSegments[0].length === 2 && pathSegments[0] !== 'pt') {
+    const pathWithoutLang = pathname.replace(/^\/[^\/]+/, '');
     
     return new Response(null, {
       status: 302,
       headers: {
-        Location: `${url.origin}${newPathname}${url.search}${url.hash}`,
+        Location: `${url.origin}${pathWithoutLang || '/'}${url.search}${url.hash}`,
       },
     });
   }

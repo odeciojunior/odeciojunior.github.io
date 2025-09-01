@@ -15,7 +15,6 @@ import {
   getLocaleFromPath,
   getLocalizedPath,
   searchPostsByLocale,
-  getTagsByLocale,
   sortPostsByDate,
 } from "./content";
 
@@ -36,7 +35,7 @@ export async function getPostsForTagPage(tag: string, locale: "pt-BR" | "en-US")
 }
 
 // Example 4: API route to get posts dynamically
-export async function GET({ params, request }: APIContext) {
+export async function GET({ params: _params, request }: APIContext) {
   const url = new URL(request.url);
   const locale = getLocaleFromPath(url.pathname);
   const tag = url.searchParams.get("tag");
@@ -127,7 +126,6 @@ export async function generateTagClouds() {
   const tagClouds: Record<string, Array<{ tag: string; count: number }>> = {};
 
   for (const locale of locales) {
-    const tags = await getTagsByLocale(locale);
     const tagCounts: Record<string, number> = {};
     
     const posts = await getPostsByLocale(locale);

@@ -1,6 +1,0 @@
----
-import { DEFAULT_LANGUAGE } from "@/i18n/config";
-
-// Redirect to localized about page
-return Astro.redirect(`/${DEFAULT_LANGUAGE === 'en-US' ? 'en' : DEFAULT_LANGUAGE === 'pt-BR' ? 'pt' : DEFAULT_LANGUAGE}/about/`, 301);
----
