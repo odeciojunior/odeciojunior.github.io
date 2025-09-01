@@ -1,0 +1,53 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Tag from "@/components/Tag.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import getUniqueTags from "@/utils/getUniqueTags";
+import { SITE } from "@/config";
+import { SUPPORTED_LANGUAGES, type Language } from "@/i18n/config";
+import { t } from "@/i18n/utils";
+
+export const getStaticPaths = (() => {
+  return SUPPORTED_LANGUAGES.map(language => {
+    const locale = language === 'en-US' ? 'en' : language === 'pt-BR' ? 'pt' : language;
+    return {
+      params: { locale },
+      props: { locale: language }
+    };
+  });
+}) satisfies GetStaticPaths;
+
+const { locale } = Astro.props;
+const currentLocale = locale as Language;
+const localeSlug = currentLocale === 'en-US' ? 'en' : currentLocale === 'pt-BR' ? 'pt' : currentLocale;
+
+// Set current language in Astro.locals
+Astro.locals.currentLanguage = currentLocale;
+
+const posts = await getCollection("blog", ({ data }) => {
+  if (data.draft) return false;
+  // Filter by locale if specified
+  if (data.locale) {
+    return data.locale === currentLocale;
+  }
+  return true;
+});
+
+let tags = getUniqueTags(posts);
+---
+
+<Layout title={`${t(currentLocale, 'tags')} | ${SITE.title}`} lang={currentLocale}>
+  <Header />
+  <Main pageTitle={t(currentLocale, 'tags')} pageDesc={t(currentLocale, 'tagsDescription')}>
+    <ul>
+      {tags.map(({ tag, tagName }) => (
+        <Tag tag={tag} tagName={tagName} size="lg" locale={localeSlug} />
+      ))}
+    </ul>
+  </Main>
+  <Footer />
+</Layout>

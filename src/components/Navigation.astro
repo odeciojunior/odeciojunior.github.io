@@ -1,0 +1,331 @@
+---
+import { getLanguageFromURL, createTranslator, addLanguagePrefix } from '../i18n/utils';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+const { pathname } = Astro.url;
+const currentLang = getLanguageFromURL(pathname);
+const t = createTranslator(currentLang);
+
+// Navigation items with translations
+const navItems = [
+  { href: addLanguagePrefix('/', currentLang), text: t('navigation.home') },
+  { href: addLanguagePrefix('/blog', currentLang), text: t('navigation.blog') },
+  { href: addLanguagePrefix('/about', currentLang), text: t('navigation.about') },
+  { href: addLanguagePrefix('/contact', currentLang), text: t('navigation.contact') },
+];
+---
+
+<nav class="navigation" aria-label={t('navigation.home')}>
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href={addLanguagePrefix('/', currentLang)} class="brand-link">
+        <span class="brand-text">Blog</span>
+      </a>
+    </div>
+    
+    <div class="nav-menu">
+      <ul class="nav-list">
+        {navItems.map(item => (
+          <li class="nav-item">
+            <a 
+              href={item.href} 
+              class={`nav-link ${pathname === item.href ? 'active' : ''}`}
+              aria-current={pathname === item.href ? 'page' : undefined}
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+      
+      <div class="nav-actions">
+        <LanguageSwitcher />
+      </div>
+    </div>
+    
+    <!-- Mobile menu button -->
+    <button 
+      type="button" 
+      class="mobile-menu-button"
+      aria-label={t('navigation.menu')}
+      data-mobile-menu-toggle
+    >
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+  
+  <!-- Mobile menu -->
+  <div class="mobile-menu" data-mobile-menu>
+    <ul class="mobile-nav-list">
+      {navItems.map(item => (
+        <li class="mobile-nav-item">
+          <a 
+            href={item.href} 
+            class={`mobile-nav-link ${pathname === item.href ? 'active' : ''}`}
+            aria-current={pathname === item.href ? 'page' : undefined}
+          >
+            {item.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+    
+    <div class="mobile-nav-actions">
+      <LanguageSwitcher />
+    </div>
+  </div>
+</nav>
+
+<style>
+  .navigation {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+  }
+
+  .nav-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .brand-link {
+    color: #1f2937;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .brand-link:hover {
+    color: #3b82f6;
+  }
+
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-link {
+    color: #6b7280;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: #1f2937;
+  }
+
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #3b82f6;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .mobile-menu-button {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .hamburger-line {
+    width: 1.5rem;
+    height: 2px;
+    background: #374151;
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+
+  .mobile-menu {
+    display: none;
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+    background: white;
+  }
+
+  .mobile-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mobile-nav-item {
+    margin-bottom: 0.5rem;
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: 0.75rem 0;
+    color: #374151;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link.active {
+    color: #3b82f6;
+  }
+
+  .mobile-nav-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    .nav-menu {
+      display: none;
+    }
+
+    .mobile-menu-button {
+      display: flex;
+    }
+
+    .mobile-menu[data-open="true"] {
+      display: block;
+    }
+
+    .mobile-menu-button[data-open="true"] .hamburger-line:nth-child(1) {
+      transform: rotate(45deg) translate(3px, 3px);
+    }
+
+    .mobile-menu-button[data-open="true"] .hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .mobile-menu-button[data-open="true"] .hamburger-line:nth-child(3) {
+      transform: rotate(-45deg) translate(3px, -3px);
+    }
+  }
+
+  /* Dark mode */
+  @media (prefers-color-scheme: dark) {
+    .navigation {
+      background: #1f2937;
+      border-bottom-color: #374151;
+    }
+
+    .brand-link {
+      color: #f9fafb;
+    }
+
+    .brand-link:hover {
+      color: #60a5fa;
+    }
+
+    .nav-link {
+      color: #d1d5db;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: #f9fafb;
+    }
+
+    .nav-link.active::after {
+      background: #60a5fa;
+    }
+
+    .hamburger-line {
+      background: #d1d5db;
+    }
+
+    .mobile-menu {
+      background: #1f2937;
+      border-top-color: #374151;
+    }
+
+    .mobile-nav-link {
+      color: #d1d5db;
+    }
+
+    .mobile-nav-link:hover,
+    .mobile-nav-link.active {
+      color: #60a5fa;
+    }
+
+    .mobile-nav-actions {
+      border-top-color: #374151;
+    }
+  }
+</style>
+
+<script>
+  function initMobileMenu() {
+    const button = document.querySelector('[data-mobile-menu-toggle]');
+    const menu = document.querySelector('[data-mobile-menu]');
+
+    if (!button || !menu) return;
+
+    button.addEventListener('click', () => {
+      const isOpen = menu.getAttribute('data-open') === 'true';
+      const newState = (!isOpen).toString();
+      
+      menu.setAttribute('data-open', newState);
+      button.setAttribute('data-open', newState);
+      button.setAttribute('aria-expanded', newState);
+    });
+
+    // Close mobile menu when clicking on links
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menu.setAttribute('data-open', 'false');
+        button.setAttribute('data-open', 'false');
+        button.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+  } else {
+    initMobileMenu();
+  }
+
+  // Reinitialize on page navigation
+  document.addEventListener('astro:page-load', initMobileMenu);
+</script>

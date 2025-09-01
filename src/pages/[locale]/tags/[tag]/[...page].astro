@@ -1,0 +1,78 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import Pagination from "@/components/Pagination.astro";
+import getUniqueTags from "@/utils/getUniqueTags";
+import getPostsByTag from "@/utils/getPostsByTag";
+import { SITE } from "@/config";
+import { SUPPORTED_LANGUAGES, type Language } from "@/i18n/config";
+import { t } from "@/i18n/utils";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const paths = [];
+
+  for (const language of SUPPORTED_LANGUAGES) {
+    const locale = language === 'en-US' ? 'en' : language === 'pt-BR' ? 'pt' : language;
+    
+    // Filter posts by locale
+    const localePosts = posts.filter(post => {
+      if (post.data.locale) {
+        return post.data.locale === language;
+      }
+      return true;
+    });
+
+    const tags = getUniqueTags(localePosts);
+
+    for (const { tag } of tags) {
+      const tagPosts = getPostsByTag(localePosts, tag);
+      
+      const paginatedPosts = paginate(tagPosts, {
+        params: { locale, tag },
+        pageSize: SITE.postPerPage,
+        props: { 
+          locale: language,
+          tag,
+          tagName: tag
+        }
+      });
+
+      paths.push(...paginatedPosts);
+    }
+  }
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+const { page, locale, tagName } = Astro.props;
+const currentLocale = locale as Language;
+const localeSlug = currentLocale === 'en-US' ? 'en' : currentLocale === 'pt-BR' ? 'pt' : currentLocale;
+
+// Set current language in Astro.locals
+Astro.locals.currentLanguage = currentLocale;
+---
+
+<Layout title={`${t(currentLocale, 'tag')}: ${tagName} | ${SITE.title}`} lang={currentLocale}>
+  <Header />
+  <Main 
+    pageTitle={[t(currentLocale, 'tag'), `${tagName}`]} 
+    titleTransition={tagName}
+    pageDesc={`${t(currentLocale, 'postsWithTag')} "${tagName}".`}
+  >
+    <h1 slot="title" transition:name={tagName}>{`${t(currentLocale, 'tag')}:${tagName}`}</h1>
+    <p slot="desc">{t(currentLocale, 'postsWithTag')} "{tagName}".</p>
+    <ul>
+      {page.data.map(data => <Card {...data} locale={currentLocale} />)}
+    </ul>
+  </Main>
+
+  <Pagination page={page} locale={localeSlug} />
+
+  <Footer noMarginTop={page.lastPage > 1} />
+</Layout>

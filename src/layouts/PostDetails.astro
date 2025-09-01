@@ -17,10 +17,10 @@ import { SITE } from "@/config";
 
 export interface Props {
   post: CollectionEntry<"blog">;
-  posts: CollectionEntry<"blog">[];
+  posts?: CollectionEntry<"blog">[];
 }
 
-const { post, posts } = Astro.props;
+const { post, posts = [] } = Astro.props;
 
 const {
   title,

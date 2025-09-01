@@ -1,0 +1,137 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Socials from "@/components/Socials.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import Card from "@/components/Card.astro";
+import Hr from "@/components/Hr.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import IconRss from "@/assets/icons/IconRss.svg";
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import { SITE } from "@/config";
+import { SOCIALS } from "@/constants";
+import { SUPPORTED_LANGUAGES, type Language } from "@/i18n/config";
+import { t } from "@/i18n/utils";
+
+export const getStaticPaths = (() => {
+  return SUPPORTED_LANGUAGES.map(locale => ({
+    params: { locale: locale === 'en-US' ? 'en' : locale === 'pt-BR' ? 'pt' : locale }
+  }));
+}) satisfies GetStaticPaths;
+
+const { locale } = Astro.params;
+const currentLocale = (locale === 'en' ? 'en-US' : locale === 'pt' ? 'pt-BR' : locale) as Language;
+
+const posts = await getCollection("blog", ({ data }) => !data.draft);
+const sortedPosts = getSortedPosts(posts);
+const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
+const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+
+// Set current language in Astro.locals
+Astro.locals.currentLanguage = currentLocale;
+---
+
+<Layout lang={currentLocale}>
+  <Header />
+  <main id="main-content" data-layout="index">
+    <section id="hero" class="pt-8 pb-6">
+      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
+        Odécio Machado
+      </h1>
+      <a
+        target="_blank"
+        href={`/${locale}/rss.xml`}
+        class="inline-block"
+        aria-label="rss feed"
+        title="RSS Feed"
+      >
+        <IconRss
+          width={20}
+          height={20}
+          class="scale-125 stroke-accent stroke-3 rtl:-rotate-90"
+        />
+        <span class="sr-only">RSS Feed</span>
+      </a>
+
+      <p>
+        💡 Fusionista, 🦸‍♂️ Hero Corp, 🧠 Cognitus
+        👨‍💻 {t(currentLocale, 'hero.programmingDescription')}
+        🧙‍♂️ {t(currentLocale, 'hero.expertDescription')}
+        🎓 {t(currentLocale, 'hero.educationDescription')}
+        🚩 Vitória, ES - Brazil 
+      </p>
+      <p class="mt-2">
+        {t(currentLocale, 'hero.readBlogText')}
+        <LinkButton
+          class="underline decoration-dashed underline-offset-4 hover:text-accent"
+          href="https://github.com/satnaing/astro-paper#readme"
+        >
+          README
+        </LinkButton> {t(currentLocale, 'hero.moreInfoText')}.
+      </p>
+      {
+        // only display if at least one social link is enabled
+        SOCIALS.length > 0 && (
+          <div class="mt-4 flex flex-col sm:flex-row sm:items-center">
+            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">{t(currentLocale, 'socialLinks')}:</div>
+            <Socials />
+          </div>
+        )
+      }
+    </section>
+
+    <Hr />
+
+    {
+      featuredPosts.length > 0 && (
+        <>
+          <section id="featured" class="pt-12 pb-6">
+            <h2 class="text-2xl font-semibold tracking-wide">{t(currentLocale, 'featured')}</h2>
+            <ul>
+              {featuredPosts.map(data => (
+                <Card variant="h3" {...data} locale={currentLocale} />
+              ))}
+            </ul>
+          </section>
+          {recentPosts.length > 0 && <Hr />}
+        </>
+      )
+    }
+
+    {
+      recentPosts.length > 0 && (
+        <section id="recent-posts" class="pt-12 pb-6">
+          <h2 class="text-2xl font-semibold tracking-wide">{t(currentLocale, 'recentPosts')}</h2>
+          <ul>
+            {recentPosts.map(
+              (data, index) =>
+                index < SITE.postPerIndex && <Card variant="h3" {...data} locale={currentLocale} />
+            )}
+          </ul>
+        </section>
+      )
+    }
+
+    <div class="my-8 text-center">
+      <LinkButton href={`/${locale}/posts/`}>
+        {t(currentLocale, 'allPosts')}
+        <IconArrowRight class="inline-block rtl:-rotate-180" />
+      </LinkButton>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
+      ?.dataset?.layout;
+    if (indexLayout) {
+      const locale = window.location.pathname.split('/')[1];
+      sessionStorage.setItem("backUrl", `/${locale}/`);
+    }
+  });
+</script>

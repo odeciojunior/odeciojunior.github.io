@@ -1,0 +1,38 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE } from "@/config";
+import { SUPPORTED_LANGUAGES, type Language } from "@/i18n/config";
+import { t } from "@/i18n/utils";
+
+export const getStaticPaths = (() => {
+  return SUPPORTED_LANGUAGES.map(language => {
+    const locale = language === 'en-US' ? 'en' : language === 'pt-BR' ? 'pt' : language;
+    return {
+      params: { locale },
+      props: { locale: language }
+    };
+  });
+}) satisfies GetStaticPaths;
+
+const { locale } = Astro.props;
+const currentLocale = locale as Language;
+
+// Set current language in Astro.locals
+Astro.locals.currentLanguage = currentLocale;
+---
+
+<Layout title={`${t(currentLocale, 'about')} | ${SITE.title}`} lang={currentLocale}>
+  <Header />
+  <main id="main-content">
+    <section class="prose mx-auto max-w-4xl px-4 py-8">
+      <h1>{t(currentLocale, 'about')}</h1>
+      <p>
+        {t(currentLocale, 'aboutDescription')}
+      </p>
+    </section>
+  </main>
+  <Footer />
+</Layout>

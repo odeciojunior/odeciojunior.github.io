@@ -2,15 +2,19 @@
 author: Sat Naing
 pubDatetime: 2022-09-23T15:22:00Z
 modDatetime: 2025-06-13T16:52:45.934Z
-title: Adding new posts in AstroPaper theme
-slug: adding-new-posts-in-astropaper-theme
+title: Adicionando novos posts no tema AstroPaper
+slug: adicionando-novos-posts-tema-astropaper
 featured: true
 draft: false
 tags:
   - docs
+  - tutorial
+locale: pt-BR
+language: pt
+alternates:
+  en-US: adding-new-posts-in-astropaper-theme
 description:
-  Some rules & recommendations for creating or adding new posts using AstroPaperr
-  theme.
+  Algumas regras e recomendações para criar ou adicionar novos posts usando o tema AstroPaper.
 ---
 
 Here are some rules/recommendations, tips & ticks for creating new posts in AstroPaper blog theme.

@@ -1,12 +1,15 @@
 ---
 import { SOCIALS } from "@/constants";
 import LinkButton from "./LinkButton.astro";
+import { createTranslator, type Language } from "@/i18n/utils";
 
 export interface Props {
   centered?: boolean;
+  locale?: Language;
 }
 
-const { centered = false } = Astro.props;
+const { centered = false, locale = "en-US" } = Astro.props;
+const t = createTranslator(locale);
 ---
 
 <div class:list={["flex-wrap justify-center gap-1", { flex: centered }]}>
@@ -15,10 +18,10 @@ const { centered = false } = Astro.props;
       <LinkButton
         href={social.href}
         class="p-2 hover:rotate-6 sm:p-1"
-        title={social.linkTitle}
+        title={t(`socials.${social.name.toLowerCase()}.title`)}
       >
         <social.icon class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" />
-        <span class="sr-only">{social.linkTitle}</span>
+        <span class="sr-only">{t(`socials.${social.name.toLowerCase()}.title`)}</span>
       </LinkButton>
     ))
   }

@@ -1,32 +1,23 @@
 ---
 import type { GetStaticPaths } from "astro";
-import { getCollection } from "astro:content";
-import Main from "@/layouts/Main.astro";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
-import Card from "@/components/Card.astro";
-import Pagination from "@/components/Pagination.astro";
-import getSortedPosts from "@/utils/getSortedPosts";
-import { SITE } from "@/config";
+import { DEFAULT_LANGUAGE } from "@/i18n/config";
 
-export const getStaticPaths = (async ({ paginate }) => {
-  const posts = await getCollection("blog", ({ data }) => !data.draft);
-  return paginate(getSortedPosts(posts), { pageSize: SITE.postPerPage });
+// This is a redirect page for old non-localized pagination URLs
+// Generate paths for common pagination routes
+export const getStaticPaths = (() => {
+  // Generate paths for pagination routes (1-20 should cover most cases)
+  const paths: { params: { page: string } }[] = [];
+  for (let i = 1; i <= 20; i++) {
+    paths.push({ params: { page: i.toString() } });
+  }
+  return paths;
 }) satisfies GetStaticPaths;
 
-const { page } = Astro.props;
+// Redirect to localized posts page
+const page = typeof Astro.params.page === 'string' ? Astro.params.page : '1';
+const defaultLocale = DEFAULT_LANGUAGE === 'en-US' ? 'en' : DEFAULT_LANGUAGE === 'pt-BR' ? 'pt' : DEFAULT_LANGUAGE;
+
+return Astro.redirect(page === '1' 
+  ? `/${defaultLocale}/posts/`
+  : `/${defaultLocale}/posts/${page}/`, 301);
 ---
-
-<Layout title={`Posts | ${SITE.title}`}>
-  <Header />
-  <Main pageTitle="Posts" pageDesc="All the articles I've posted.">
-    <ul>
-      {page.data.map(data => <Card {...data} />)}
-    </ul>
-  </Main>
-
-  <Pagination {page} />
-
-  <Footer noMarginTop={page.lastPage > 1} />
-</Layout>

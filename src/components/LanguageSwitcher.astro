@@ -1,0 +1,215 @@
+---
+import { getLanguageFromURL, getAlternativeLanguage, getAlternateURLs, createTranslator, getAvailableLanguages } from '../i18n/utils';
+
+const { pathname } = Astro.url;
+const currentLang = getLanguageFromURL(pathname);
+const t = createTranslator(currentLang);
+const alternateURLs = getAlternateURLs(pathname);
+const availableLanguages = getAvailableLanguages();
+---
+
+<div class="language-switcher">
+  <button 
+    type="button" 
+    class="language-toggle"
+    aria-label={t('language.switchTo', { language: getAlternativeLanguage(currentLang) })}
+    data-language-switcher
+  >
+    <span class="current-lang">
+      {availableLanguages.find(lang => lang.code === currentLang)?.flag}
+      <span class="sr-only">{t('language.current', { language: availableLanguages.find(lang => lang.code === currentLang)?.name || 'English' })}</span>
+    </span>
+    <svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  
+  <div class="language-menu" data-language-menu>
+    {availableLanguages.map(lang => (
+      <a 
+        href={alternateURLs[lang.code]}
+        class={`language-option ${lang.code === currentLang ? 'active' : ''}`}
+        data-language={lang.code}
+        hreflang={lang.code}
+      >
+        <span class="flag">{lang.flag}</span>
+        <span class="name">{lang.name}</span>
+        {lang.code === currentLang && (
+          <span class="checkmark">✓</span>
+        )}
+      </a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .language-switcher {
+    position: relative;
+    display: inline-block;
+  }
+
+  .language-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.375rem;
+    color: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .language-toggle:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .current-lang {
+    font-size: 1.125rem;
+  }
+
+  .chevron {
+    transition: transform 0.2s ease;
+  }
+
+  .language-switcher[data-open="true"] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .language-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    min-width: 150px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 50;
+  }
+
+  .language-switcher[data-open="true"] .language-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .language-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    color: #374151;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    border-radius: 0.375rem;
+    margin: 0.25rem;
+  }
+
+  .language-option:hover {
+    background-color: #f3f4f6;
+  }
+
+  .language-option.active {
+    background-color: #eff6ff;
+    color: #2563eb;
+  }
+
+  .flag {
+    font-size: 1.25rem;
+  }
+
+  .name {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  .checkmark {
+    color: #10b981;
+    font-weight: bold;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .language-menu {
+      background: #1f2937;
+      border-color: #374151;
+    }
+
+    .language-option {
+      color: #d1d5db;
+    }
+
+    .language-option:hover {
+      background-color: #374151;
+    }
+
+    .language-option.active {
+      background-color: #1e3a8a;
+      color: #93c5fd;
+    }
+  }
+</style>
+
+<script>
+  import { storeLanguagePreference } from '../i18n/utils';
+
+  function initLanguageSwitcher() {
+    const switcher = document.querySelector('[data-language-switcher]');
+    const menu = document.querySelector('[data-language-menu]');
+    const options = document.querySelectorAll('[data-language]');
+
+    if (!switcher || !menu) return;
+
+    // Toggle menu
+    switcher.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = switcher.parentElement?.getAttribute('data-open') === 'true';
+      switcher.parentElement?.setAttribute('data-open', (!isOpen).toString());
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', () => {
+      switcher.parentElement?.setAttribute('data-open', 'false');
+    });
+
+    // Handle language selection
+    options.forEach(option => {
+      option.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLAnchorElement;
+        const lang = target.getAttribute('data-language');
+        if (lang) {
+          storeLanguagePreference(lang as any);
+        }
+      });
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLanguageSwitcher);
+  } else {
+    initLanguageSwitcher();
+  }
+
+  // Reinitialize on page navigation (for SPA-like behavior)
+  document.addEventListener('astro:page-load', initLanguageSwitcher);
+</script>

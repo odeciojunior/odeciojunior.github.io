@@ -1,0 +1,157 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Salvar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "home": "Início",
+    "search": "Buscar",
+    "close": "Fechar",
+    "open": "Abrir"
+  },
+  "navigation": {
+    "home": "Início",
+    "blog": "Blog",
+    "about": "Sobre",
+    "contact": "Contato",
+    "archive": "Arquivo",
+    "categories": "Categorias",
+    "tags": "Tags"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Últimos posts e reflexões",
+    "readMore": "Leia mais",
+    "readingTime": "{{minutes}} min de leitura",
+    "publishedOn": "Publicado em {{date}}",
+    "updatedOn": "Atualizado em {{date}}",
+    "author": "Por {{name}}",
+    "category": "Categoria",
+    "tags": "Tags",
+    "relatedPosts": "Posts Relacionados",
+    "noPostsFound": "Nenhum post encontrado",
+    "searchPlaceholder": "Buscar posts...",
+    "allPosts": "Todos os Posts",
+    "latestPosts": "Últimos Posts",
+    "popularPosts": "Posts Populares",
+    "backToBlog": "Voltar ao Blog"
+  },
+  "post": {
+    "share": "Compartilhar",
+    "shareOn": "Compartilhar no {{platform}}",
+    "copyLink": "Copiar link",
+    "linkCopied": "Link copiado para a área de transferência",
+    "tableOfContents": "Índice",
+    "publishDate": "Data de Publicação",
+    "lastUpdated": "Última Atualização",
+    "readNext": "Próxima Leitura",
+    "comments": "Comentários",
+    "noComments": "Ainda não há comentários"
+  },
+  "about": {
+    "title": "Sobre",
+    "subtitle": "Conheça mais sobre mim",
+    "bio": "Biografia",
+    "skills": "Habilidades",
+    "experience": "Experiência",
+    "education": "Educação",
+    "contact": "Entre em contato"
+  },
+  "contact": {
+    "title": "Contato",
+    "subtitle": "Vamos conversar",
+    "name": "Nome",
+    "email": "E-mail",
+    "subject": "Assunto",
+    "message": "Mensagem",
+    "send": "Enviar Mensagem",
+    "sending": "Enviando...",
+    "messageSent": "Mensagem enviada com sucesso!",
+    "messageError": "Erro ao enviar mensagem. Tente novamente.",
+    "required": "Este campo é obrigatório",
+    "invalidEmail": "Por favor, insira um endereço de e-mail válido"
+  },
+  "footer": {
+    "copyright": "© {{year}} {{siteName}}. Todos os direitos reservados.",
+    "copyrightSymbol": "Copyright ©",
+    "allRightsReserved": "Todos os direitos reservados.",
+    "builtWith": "Desenvolvido com {{technology}}",
+    "source": "Código Fonte",
+    "rss": "Feed RSS"
+  },
+  "socials": {
+    "github": {
+      "title": "Visitar perfil no GitHub"
+    },
+    "x": {
+      "title": "Seguir no X"
+    },
+    "linkedin": {
+      "title": "Conectar no LinkedIn"
+    },
+    "mail": {
+      "title": "Enviar um e-mail"
+    },
+    "whatsapp": {
+      "title": "Compartilhar via WhatsApp"
+    },
+    "facebook": {
+      "title": "Compartilhar no Facebook"
+    },
+    "telegram": {
+      "title": "Compartilhar via Telegram"
+    },
+    "pinterest": {
+      "title": "Compartilhar no Pinterest"
+    }
+  },
+  "seo": {
+    "defaultTitle": "Blog Pessoal",
+    "defaultDescription": "Um blog pessoal sobre desenvolvimento web, tecnologia e vida",
+    "blogTitle": "Blog - {{siteName}}",
+    "blogDescription": "Últimos posts e pensamentos sobre desenvolvimento web e tecnologia",
+    "aboutTitle": "Sobre - {{siteName}}",
+    "aboutDescription": "Saiba mais sobre a pessoa por trás deste blog",
+    "contactTitle": "Contato - {{siteName}}",
+    "contactDescription": "Entre em contato e vamos começar uma conversa"
+  },
+  "errors": {
+    "404": {
+      "title": "Página Não Encontrada",
+      "message": "A página que você está procurando não existe.",
+      "backHome": "Voltar ao início"
+    },
+    "500": {
+      "title": "Erro do Servidor",
+      "message": "Algo deu errado do nosso lado.",
+      "retry": "Tentar novamente"
+    }
+  },
+  "language": {
+    "switchTo": "Mudar para {{language}}",
+    "current": "Idioma atual: {{language}}"
+  },
+  "theme": {
+    "toggle": "Alternar tema",
+    "light": "Modo claro",
+    "dark": "Modo escuro",
+    "system": "Preferência do sistema"
+  },
+  "time": {
+    "justNow": "agora mesmo",
+    "minutesAgo": "{{count}} minutos atrás",
+    "hoursAgo": "{{count}} horas atrás",
+    "daysAgo": "{{count}} dias atrás",
+    "weeksAgo": "{{count}} semanas atrás",
+    "monthsAgo": "{{count}} meses atrás",
+    "yearsAgo": "{{count}} anos atrás"
+  },
+  "months": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+}

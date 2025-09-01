@@ -3,14 +3,20 @@ import { slugifyStr } from "@/utils/slugify";
 import type { CollectionEntry } from "astro:content";
 import { getPath } from "@/utils/getPath";
 import Datetime from "./Datetime.astro";
+import { getLanguageFromURL, type Language } from "@/i18n/utils";
 
 export interface Props extends CollectionEntry<"blog"> {
   variant?: "h2" | "h3";
+  locale?: Language;
 }
 
-const { variant = "h2", data, id, filePath } = Astro.props;
+const { variant = "h2", data, id, filePath, locale } = Astro.props;
 
 const { title, description, pubDatetime, modDatetime, timezone } = data;
+
+// Get current language from props or URL
+const currentLanguage = locale || Astro.locals.currentLanguage || getLanguageFromURL(Astro.url.pathname);
+const localeSlug = currentLanguage === 'en-US' ? 'en' : currentLanguage === 'pt-BR' ? 'pt' : currentLanguage;
 
 const headerProps = {
   style: { viewTransitionName: slugifyStr(title) },
@@ -20,7 +26,7 @@ const headerProps = {
 
 <li class="my-6">
   <a
-    href={getPath(id, filePath)}
+    href={`/${localeSlug}${getPath(id, filePath)}`}
     class="inline-block text-lg font-medium text-accent decoration-dashed underline-offset-4 focus-visible:no-underline focus-visible:underline-offset-0"
   >
     {

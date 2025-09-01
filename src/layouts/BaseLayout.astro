@@ -1,0 +1,64 @@
+---
+import { getLanguageFromURL } from '../i18n/utils';
+import { getCanonicalURL, getHreflangLinks, getOGLocale } from '../i18n/utils/middleware';
+import { LANGUAGE_METADATA } from '../i18n/config';
+
+export interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  canonicalURL?: string;
+}
+
+const { title, description = '', ogImage, canonicalURL } = Astro.props;
+const { pathname } = Astro.url;
+const currentLang = getLanguageFromURL(pathname);
+
+// Generate SEO URLs
+const baseURL = Astro.site?.toString() || 'https://odeciojunior.github.io';
+const canonical = canonicalURL || getCanonicalURL(baseURL, pathname, currentLang);
+const hreflangLinks = getHreflangLinks(baseURL, pathname);
+const ogLocale = getOGLocale(currentLang);
+const langDirection = LANGUAGE_METADATA[currentLang].direction;
+---
+
+<!DOCTYPE html>
+<html lang={currentLang} dir={langDirection}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonical} />
+    
+    <!-- Hreflang links for SEO -->
+    {hreflangLinks.map(link => (
+      <link rel="alternate" hreflang={link.hreflang} href={link.href} />
+    ))}
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:locale" content={ogLocale} />
+    {description && <meta property="og:description" content={description} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonical} />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <slot name="head" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

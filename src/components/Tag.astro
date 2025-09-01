@@ -1,13 +1,19 @@
 ---
 import IconHash from "@/assets/icons/IconHash.svg";
+import { getLanguageFromURL } from "@/i18n/utils";
 
 export interface Props {
   tag: string;
   tagName: string;
   size?: "sm" | "lg";
+  locale?: string;
 }
 
-const { tag, tagName, size = "sm" } = Astro.props;
+const { tag, tagName, size = "sm", locale } = Astro.props;
+
+// Get current language
+const currentLanguage = Astro.locals.currentLanguage || getLanguageFromURL(Astro.url.pathname);
+const localeSlug = locale || (currentLanguage === 'en-US' ? 'en' : currentLanguage === 'pt-BR' ? 'pt' : currentLanguage);
 ---
 
 <li
@@ -17,7 +23,7 @@ const { tag, tagName, size = "sm" } = Astro.props;
   ]}
 >
   <a
-    href={`/tags/${tag}/`}
+    href={`/${localeSlug}/tags/${tag}/`}
     transition:name={tag}
     class:list={[
       "relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline",

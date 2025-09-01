@@ -1,0 +1,157 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "home": "Home",
+    "search": "Search",
+    "close": "Close",
+    "open": "Open"
+  },
+  "navigation": {
+    "home": "Home",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "archive": "Archive",
+    "categories": "Categories",
+    "tags": "Tags"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Latest posts and thoughts",
+    "readMore": "Read more",
+    "readingTime": "{{minutes}} min read",
+    "publishedOn": "Published on {{date}}",
+    "updatedOn": "Updated on {{date}}",
+    "author": "By {{name}}",
+    "category": "Category",
+    "tags": "Tags",
+    "relatedPosts": "Related Posts",
+    "noPostsFound": "No posts found",
+    "searchPlaceholder": "Search posts...",
+    "allPosts": "All Posts",
+    "latestPosts": "Latest Posts",
+    "popularPosts": "Popular Posts",
+    "backToBlog": "Back to Blog"
+  },
+  "post": {
+    "share": "Share",
+    "shareOn": "Share on {{platform}}",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied to clipboard",
+    "tableOfContents": "Table of Contents",
+    "publishDate": "Publish Date",
+    "lastUpdated": "Last Updated",
+    "readNext": "Read Next",
+    "comments": "Comments",
+    "noComments": "No comments yet"
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "Get to know more about me",
+    "bio": "Biography",
+    "skills": "Skills",
+    "experience": "Experience",
+    "education": "Education",
+    "contact": "Get in touch"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Let's get in touch",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "messageSent": "Message sent successfully!",
+    "messageError": "Error sending message. Please try again.",
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address"
+  },
+  "footer": {
+    "copyright": "© {{year}} {{siteName}}. All rights reserved.",
+    "copyrightSymbol": "Copyright ©",
+    "allRightsReserved": "All rights reserved.",
+    "builtWith": "Built with {{technology}}",
+    "source": "Source Code",
+    "rss": "RSS Feed"
+  },
+  "socials": {
+    "github": {
+      "title": "Visit GitHub profile"
+    },
+    "x": {
+      "title": "Follow on X"
+    },
+    "linkedin": {
+      "title": "Connect on LinkedIn"
+    },
+    "mail": {
+      "title": "Send an email"
+    },
+    "whatsapp": {
+      "title": "Share via WhatsApp"
+    },
+    "facebook": {
+      "title": "Share on Facebook"
+    },
+    "telegram": {
+      "title": "Share via Telegram"
+    },
+    "pinterest": {
+      "title": "Share on Pinterest"
+    }
+  },
+  "seo": {
+    "defaultTitle": "Personal Blog",
+    "defaultDescription": "A personal blog about web development, technology, and life",
+    "blogTitle": "Blog - {{siteName}}",
+    "blogDescription": "Latest posts and thoughts on web development and technology",
+    "aboutTitle": "About - {{siteName}}",
+    "aboutDescription": "Learn more about the person behind this blog",
+    "contactTitle": "Contact - {{siteName}}",
+    "contactDescription": "Get in touch and let's start a conversation"
+  },
+  "errors": {
+    "404": {
+      "title": "Page Not Found",
+      "message": "The page you're looking for doesn't exist.",
+      "backHome": "Go back home"
+    },
+    "500": {
+      "title": "Server Error",
+      "message": "Something went wrong on our end.",
+      "retry": "Try again"
+    }
+  },
+  "language": {
+    "switchTo": "Switch to {{language}}",
+    "current": "Current language: {{language}}"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light mode",
+    "dark": "Dark mode",
+    "system": "System preference"
+  },
+  "time": {
+    "justNow": "just now",
+    "minutesAgo": "{{count}} minutes ago",
+    "hoursAgo": "{{count}} hours ago",
+    "daysAgo": "{{count}} days ago",
+    "weeksAgo": "{{count}} weeks ago",
+    "monthsAgo": "{{count}} months ago",
+    "yearsAgo": "{{count}} years ago"
+  },
+  "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+}
