@@ -36,7 +36,7 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : (currentLocale =
 <Layout title={`${t(currentLocale, 'search')} | ${SITE.title}`} lang={currentLocale}>
   <Header />
   <Main pageTitle={t(currentLocale, 'search')} pageDesc={t(currentLocale, 'searchDescription')}>
-    <div id="pagefind-search" transition:persist data-backurl={backUrl} data-locale={currentLocale}></div>
+    <div id="pagefind-search" transition:persist data-backurl={backUrl} data-locale={currentLocale} data-language={currentLocale === 'en-US' ? 'en' : 'pt'}></div>
   </Main>
   <Footer />
 </Layout>
@@ -66,11 +66,15 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : (currentLocale =
           `;
       }
 
-      // Init pagefind ui
+      // Get language from dataset
+      const language = pageFindSearch?.dataset?.language || 'en';
+      
+      // Init pagefind ui with language support
       const search = new PagefindUI({
         element: "#pagefind-search",
         showSubResults: true,
         showImages: false,
+        language: language,
         processTerm: function (term: string) {
           params.set("q", term); // Update the `q` parameter in the URL
           history.replaceState(history.state, "", "?" + params.toString()); // Push the new URL without reloading

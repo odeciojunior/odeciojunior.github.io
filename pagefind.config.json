@@ -1,0 +1,29 @@
+{
+  "site": "dist",
+  "root_selector": "body",
+  "exclude_selectors": [
+    "header",
+    "footer",
+    "nav",
+    "script",
+    "style",
+    ".hidden",
+    "#menu-items",
+    "[aria-hidden='true']",
+    ".sr-only",
+    "[data-astro-transition-scope]"
+  ],
+  "languages": {
+    "en": {
+      "name": "English",
+      "code": "en-US"
+    },
+    "pt": {
+      "name": "Português",
+      "code": "pt-BR"
+    }
+  },
+  "default_language": "en",
+  "force_language": false,
+  "verbose": true
+}

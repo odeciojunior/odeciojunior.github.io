@@ -4,9 +4,9 @@
   "version": "5.5.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build && pagefind --site dist --root-selector body --exclude-selectors \"header,footer,nav,script,style,.hidden,#menu-items,[aria-hidden='true'],.sr-only,[data-astro-transition-scope]\" --verbose && cp -r dist/pagefind public/",
-    "build:search": "pagefind --site dist --root-selector body --exclude-selectors \"header,footer,nav,script,style,.hidden,#menu-items,[aria-hidden='true'],.sr-only,[data-astro-transition-scope]\"",
-    "test:search": "pagefind --site dist --root-selector body --exclude-selectors \"header,footer,nav,script,style,.hidden,#menu-items,[aria-hidden='true'],.sr-only,[data-astro-transition-scope]\" --verbose",
+    "build": "astro check && astro build && pagefind --site dist --root-selector body --exclude-selectors \"header,footer,nav,script,style,.hidden,#menu-items,[aria-hidden='true'],.sr-only,[data-astro-transition-scope]\" --force-language pt --verbose && cp -r dist/pagefind public/",
+    "build:search": "pagefind --site dist --root-selector body --exclude-selectors \"header,footer,nav,script,style,.hidden,#menu-items,[aria-hidden='true'],.sr-only,[data-astro-transition-scope]\" --force-language pt",
+    "test:search": "pagefind --site dist --root-selector body --exclude-selectors \"header,footer,nav,script,style,.hidden,#menu-items,[aria-hidden='true'],.sr-only,[data-astro-transition-scope]\" --force-language pt --verbose",
     "preview": "astro preview",
     "sync": "astro sync",
     "astro": "astro",
