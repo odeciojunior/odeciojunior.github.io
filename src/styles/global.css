@@ -1,32 +1,8 @@
-@import "tailwindcss";
-@import "./typography.css";
+/* Import Tailwind CSS v4 with configuration */
+@import "./tailwind.css";
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
-:root,
-html[data-theme="light"] {
-  --background: #ffffff;
-  --foreground: #1f1f20;
-  --accent: #0076AA;
-  --muted: #e8f3f8;
-  --border: #D1DE42;
-}
-
-html[data-theme="dark"] {
-  --background: #1f1f20;
-  --foreground: #ffffff;
-  --accent: #D1DE42;
-  --muted: #5d5c5e;
-  --border: #0076AA;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --color-muted: var(--muted);
-  --color-border: var(--border);
-}
+/* Reference theme for component styles */
+@reference "./tailwind.css"
 
 @layer base {
   * {

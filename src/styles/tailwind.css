@@ -1,0 +1,69 @@
+/* Main Tailwind CSS file with v4 configuration */
+@import "tailwindcss";
+
+/* Import typography plugin */
+@plugin "@tailwindcss/typography";
+
+/* Custom variant for dark mode */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Theme configuration */
+@theme {
+  /* Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  
+  /* Typography scale */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  
+  /* Spacing scale */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* Import other styles */
+@import "./typography.css";
+
+/* CSS Variables for themes */
+:root,
+html[data-theme="light"] {
+  --background: #ffffff;
+  --foreground: #1f1f20;
+  --accent: #0076AA;
+  --muted: #e8f3f8;
+  --border: #D1DE42;
+}
+
+html[data-theme="dark"] {
+  --background: #1f1f20;
+  --foreground: #ffffff;
+  --accent: #D1DE42;
+  --muted: #5d5c5e;
+  --border: #0076AA;
+}

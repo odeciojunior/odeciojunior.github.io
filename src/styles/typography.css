@@ -1,5 +1,4 @@
-@plugin '@tailwindcss/typography';
-
+/* Typography styles - plugin loaded in tailwind.css */
 @layer base {
   /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
