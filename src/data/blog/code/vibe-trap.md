@@ -1,3 +1,23 @@
+---
+title: Vibe Trap: Critical review of vibe coding and AI-assisted development
+author: your name
+pubDatetime: 2025-09-01T02:40:00Z
+slug: vibe-trap-critical-review-of-vibe-coding-and-ai-assisted-development
+featured: true
+draft: false
+tags:
+  - vibe
+  - coding
+  - AI
+  - development
+  - productivity
+  - trap
+ogImage: ../../assets/images/vibe_trap.png # src/assets/images/vibe_trap.png
+# ogImage: "https://example.org/remote-image.png" # remote URL
+description: A critical examination of vibe coding and its implications for AI-assisted development.
+canonicalURL: https://blog.odeciomachado.com/code/vibe-trap-critical-review-of-vibe-coding-and-ai-assisted-development
+---
+
 # Vibe Trap: Critical review of vibe coding and AI-assisted development
 
 The concept of "Vibe-Driven Development" (VDD) and the associated "vibe trap" represents a critical inflection point in software engineering, where the promise of AI-assisted productivity collides with empirical evidence of skill degradation and illusory gains. This comprehensive review synthesizes recent research from 2024-2025 to validate and challenge the core claims about AI coding assistants creating dangerous productivity illusions while potentially undermining essential developer capabilities.
