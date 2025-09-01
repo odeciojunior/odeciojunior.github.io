@@ -29,6 +29,9 @@ canonicalURL: https://blog.odeciomachado.com/code/vibe-trap-critical-review-of-v
   </figcaption>
 </figure>
 
+
+https://blob.odeciomachado.com/audio/Vibe_Coding__Velocidade_ou_Armadilha__Navegando_os_Riscos_e_Promessas_da_IA_na_Programa%C3%A7%C3%A3o.m4a
+
 ## Table of contents
 
 ## The paradox of perceived versus actual productivity
