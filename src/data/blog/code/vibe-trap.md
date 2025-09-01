@@ -12,10 +12,22 @@ tags:
   - development
   - productivity
   - trap
-ogImage: "../../assets/images/vibe_trap.png"
+ogImage: "../../../assets/images/vibe_trap.png"
 description: A critical examination of vibe coding and its implications for AI-assisted development.
 canonicalURL: https://blog.odeciomachado.com/code/vibe-trap-critical-review-of-vibe-coding-and-ai-assisted-development
 ---
+
+"Vibe-Driven Development" examines AI-assisted coding where developers use natural language prompts while minimizing direct code engagement. METR 2025 found developers 19% slower with AI despite feeling 20% faster. AI code has 40% more vulnerabilities; juniors show 40% performance drops without AI; 43% of work is "productivity theater." The dopamine-driven cycle creates progress illusions while eroding skills. Success requires governance, critical thinking, and valuing real outcomes over metrics.
+
+<figure>
+  <img
+    src="../../../assets/images/vibe_trap.png"
+    alt="A guy codding inside a cage, literally busted on vibe trap"
+  />
+    <figcaption class="text-center italic">
+    AI Generated (Gemini - Nano Banana)
+  </figcaption>
+</figure>
 
 ## Table of contents
 
