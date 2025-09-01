@@ -1,7 +1,7 @@
 ---
 title: "Vibe Trap: Critical review of vibe coding and AI-assisted development"
 author: Odécio Machado
-pubDatetime: 2025-09-01T02:40:00Z
+pubDatetime: 2025-09-01T00:00:00-03:00
 slug: vibe-trap-critical-review-of-vibe-coding-and-ai-assisted-development
 featured: true
 draft: false
