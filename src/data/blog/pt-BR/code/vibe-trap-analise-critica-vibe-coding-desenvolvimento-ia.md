@@ -115,51 +115,27 @@ A ironia final pode ser que prevenir a armadilha das vibes requer exatamente o t
 ## References
 
 1. **METR Study on AI Developer Productivity** (July 2025). "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity." METR. Available at: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/ and arXiv:2507.09089
-
 2. **MIT Media Lab Study on Cognitive Decline** (2024). "Your Brain on ChatGPT: Accumulation of Cognitive Debt when Using an AI Assistant for Essay Writing Task." MIT Media Lab. Available at: https://www.media.mit.edu/publications/your-brain-on-chatgpt/
-
 3. **The 70% Problem Analysis** (2025). "The 70% problem: Hard truths about AI-assisted coding." Available at: https://addyo.substack.com/p/the-70-problem-hard-truths-about
-
 4. **Stack Overflow Developer Survey** (2025). "AI - 2025 Stack Overflow Developer Survey." Stack Overflow. Available at: https://survey.stackoverflow.co/2025/ai
-
 5. **All About AI on Dopamine Loops** (2025). "Dopamine Loops and LLMs: How AI Addiction is Hacking Your Brain." All About AI. Available at: https://www.allaboutai.com/resources/dopamine-loops-and-llms/
-
 6. **Google Research on AI Development Speed** (2024). "How much does AI impact development speed? An enterprise-based randomized controlled trial." arXiv:2410.12944v2. Available at: https://arxiv.org/html/2410.12944v2
-
 7. **GitHub Copilot Impact Measurement** (2024). "Measuring Impact of GitHub Copilot." GitHub Resources. Available at: https://resources.github.com/learn/pathways/copilot/essentials/measuring-the-impact-of-github-copilot/
-
 8. **ACM Communications on Computing Education** (2024). "Computing Education in the Era of Generative AI." Communications of the ACM. Available at: https://cacm.acm.org/research/computing-education-in-the-era-of-generative-ai/
-
 9. **Google CEO on AI Code Generation** (2024). "Google CEO says 25% of all new Google code is AI generated." Available at: https://www.fanaticalfuturist.com/2024/12/google-ceo-says-25-of-all-new-google-code-is-ai-generated/
-
 10. **Stanford/NYU Security Study** (2022-2023). "Do Users Write More Insecure Code with AI Assistants?" arXiv:2211.03622v3. Available at: https://arxiv.org/html/2211.03622v3
-
 11. **GitHub Copilot Vulnerabilities Study** (2022). "Is GitHub's Copilot as Bad as Humans at Introducing Vulnerabilities in Code?" arXiv:2204.04741v5. Available at: https://arxiv.org/html/2204.04741v5
-
 12. **Security Weaknesses Research** (2023). "Security Weaknesses of Copilot Generated Code in GitHub." arXiv:2310.02059v2. Available at: https://arxiv.org/html/2310.02059v2
-
 13. **CIO Report on AI Coding Assistants** (2024). "Devs gaining little (if anything) from AI coding assistants." CIO. Available at: https://www.cio.com/article/3540579/devs-gaining-little-if-anything-from-ai-coding-assistants.html
-
 14. **Cal Newport's Deep Work** (2016). "Deep Work: Rules for Focused Success in a Distracted World." Available at: https://calnewport.com/
-
 15. **Microsoft AI Code Assistant Study** (2024). "Examining the Use and Impact of an AI Code Assistant on Developer Productivity and Experience in the Enterprise." ACM Digital Library and arXiv:2412.06603v1
-
 16. **Productivity Theater Research** (2023). "New Survey: Performative Work and Productivity Theater." Visier. Available at: https://www.visier.com/blog/productivity-survey-shows-performative-work/
-
 17. **World Economic Forum Future of Jobs** (2025). "Future of Jobs Report 2025: 78 Million New Job Opportunities by 2030." WEF. Available at: https://www.weforum.org/press/2025/01/future-of-jobs-report-2025-78-million-new-job-opportunities-by-2030-but-urgent-upskilling-needed-to-prepare-workforces/
-
 18. **Gartner on AI Upskilling** (2024). "Gartner Says Generative AI will Require 80% of Engineering Workforce to Upskill Through 2027." Available at: https://www.gartner.com/en/newsroom/press-releases/2024-10-03-gartner-says-generative-ai-will-require-80-percent-of-engineering-workforce-to-upskill-through-2027
-
 19. **Junior Developer Skills Crisis** (2025). "Junior software developers lack coding skills because of an overreliance on AI tools." IT Pro. Available at: https://www.itpro.com/software/development/junior-developer-ai-tools-coding-skills
-
 20. **Boise State on CS Education** (2025). "Computer Science Education in the Age of AI." Boise State University. Available at: https://www.boisestate.edu/coen-cs/2025/06/25/computer-science-education-in-the-age-of-ai/
-
 21. **AI Governance Best Practices** (2024). "AI Governance: Frameworks, Tools, Best Practices." DataCamp. Available at: https://www.datacamp.com/blog/ai-governance
-
 22. **Replit Database Deletion Incident** (2025). "AI-powered coding tool wiped out a software company's database in 'catastrophic failure'." Fortune. Available at: https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/
-
 23. **MIT Report on AI Pilots Failure** (2025). "MIT report: 95% of generative AI pilots at companies are failing." Fortune. Available at: https://fortune.com/2025/08/18/mit-report-95-percent-generative-ai-pilots-at-companies-failing-cfo/
-
 24. **LeadDev on AI Transformation** (2024). "How AI will change software engineering." LeadDev. Available at: https://leaddev.com/career-development/how-ai-will-change-software-engineering
-
 25. **Greg McKeown's Essentialism** (2014). "Essentialism: The Disciplined Pursuit of Less." Available at: https://www.amazon.com/Essentialism-Disciplined-Pursuit-Greg-McKeown/dp/0804137382
