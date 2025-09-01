@@ -44,6 +44,9 @@
     "allPosts": "All Posts",
     "latestPosts": "Latest Posts",
     "popularPosts": "Popular Posts",
+    "featuredPosts": "Featured Posts",
+    "recentPosts": "Recent Posts",
+    "socialLinksText": "Find me on",
     "backToBlog": "Back to Blog"
   },
   "post": {

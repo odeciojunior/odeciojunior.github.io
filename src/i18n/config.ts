@@ -9,16 +9,16 @@ export const DEFAULT_LANGUAGE: Language = 'en-US';
 
 export const SUPPORTED_LANGUAGES = Object.keys(LANGUAGES) as Language[];
 
-// URL path mapping for locales
+// URL path mapping for locales (matching Astro config)
 export const LOCALE_PATHS = {
-  'en-US': '/en',
-  'pt-BR': '/pt',
+  'en-US': '', // Default locale has no prefix (prefixDefaultLocale: false)
+  'pt-BR': '/pt-BR',
 } as const;
 
 // Reverse mapping for path to locale
 export const PATH_TO_LOCALE = {
-  '/en': 'en-US',
-  '/pt': 'pt-BR',
+  '': 'en-US', // Root path maps to default locale
+  '/pt-BR': 'pt-BR',
 } as const;
 
 // Default routes that don't need locale prefix (redirect to default language)

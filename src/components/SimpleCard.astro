@@ -1,0 +1,45 @@
+---
+import { slugifyStr } from "@/utils/slugify";
+import Datetime from "./Datetime.astro";
+import { type Language } from "@/i18n/utils";
+
+export interface Props {
+  id: string;
+  data: {
+    title: string;
+    description: string;
+    pubDatetime: Date;
+    modDatetime?: Date | null;
+    timezone?: string;
+  };
+  variant?: "h2" | "h3";
+  locale?: Language;
+}
+
+const { variant = "h2", data, id, locale = "en-US" } = Astro.props;
+const { title, description, pubDatetime, modDatetime, timezone } = data;
+
+const localeSlug = locale === 'en-US' ? 'en' : locale === 'pt-BR' ? 'pt' : locale;
+
+const headerProps = {
+  style: { viewTransitionName: slugifyStr(title) },
+  class: "text-lg font-medium decoration-dashed hover:underline",
+};
+---
+
+<li class="my-6">
+  <a
+    href={`/${localeSlug}/posts/${id}/`}
+    class="inline-block text-lg font-medium text-accent decoration-dashed underline-offset-4 focus-visible:no-underline focus-visible:underline-offset-0"
+  >
+    {
+      variant === "h2" ? (
+        <h2 {...headerProps}>{title}</h2>
+      ) : (
+        <h3 {...headerProps}>{title}</h3>
+      )
+    }
+  </a>
+  <Datetime {pubDatetime} {modDatetime} {timezone} />
+  <p>{description}</p>
+</li>

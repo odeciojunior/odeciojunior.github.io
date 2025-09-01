@@ -18,7 +18,7 @@ export const getStaticPaths = (async ({ paginate }) => {
   const paths = [];
 
   for (const language of SUPPORTED_LANGUAGES) {
-    const locale = language === 'en-US' ? 'en' : language === 'pt-BR' ? 'pt' : language;
+    const shortLocale = language === 'en-US' ? 'en' : language === 'pt-BR' ? 'pt' : language;
     
     // Filter posts by locale
     const localePosts = posts.filter(post => {
@@ -33,8 +33,20 @@ export const getStaticPaths = (async ({ paginate }) => {
     for (const { tag } of tags) {
       const tagPosts = getPostsByTag(localePosts, tag);
       
-      const paginatedPosts = paginate(tagPosts, {
-        params: { locale, tag },
+      // Add pagination for short locale paths (en, pt)
+      const shortPaginatedPosts = paginate(tagPosts, {
+        params: { locale: shortLocale, tag },
+        pageSize: SITE.postPerPage,
+        props: { 
+          locale: language,
+          tag,
+          tagName: tag
+        }
+      });
+      
+      // Add pagination for full locale paths (en-US, pt-BR)
+      const fullPaginatedPosts = paginate(tagPosts, {
+        params: { locale: language, tag },
         pageSize: SITE.postPerPage,
         props: { 
           locale: language,
@@ -43,7 +55,7 @@ export const getStaticPaths = (async ({ paginate }) => {
         }
       });
 
-      paths.push(...paginatedPosts);
+      paths.push(...shortPaginatedPosts, ...fullPaginatedPosts);
     }
   }
 

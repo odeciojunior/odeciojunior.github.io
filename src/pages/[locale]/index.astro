@@ -17,13 +17,24 @@ import { SUPPORTED_LANGUAGES, type Language } from "@/i18n/config";
 import { t } from "@/i18n/utils";
 
 export const getStaticPaths = (() => {
-  return SUPPORTED_LANGUAGES.map(locale => ({
-    params: { locale: locale === 'en-US' ? 'en' : locale === 'pt-BR' ? 'pt' : locale }
-  }));
+  const paths = [];
+  
+  for (const language of SUPPORTED_LANGUAGES) {
+    // Only add the route for pt-BR since en-US is handled by pages/index.astro (prefixDefaultLocale: false)
+    if (language === 'pt-BR') {
+      paths.push({
+        params: { locale: language },
+        props: { locale: language }
+      });
+    }
+  }
+  
+  return paths;
 }) satisfies GetStaticPaths;
 
 const { locale } = Astro.params;
-const currentLocale = (locale === 'en' ? 'en-US' : locale === 'pt' ? 'pt-BR' : locale) as Language;
+const { locale: propsLocale } = Astro.props;
+const currentLocale = (propsLocale || locale) as Language;
 
 const posts = await getCollection("blog", ({ data }) => !data.draft);
 const sortedPosts = getSortedPosts(posts);

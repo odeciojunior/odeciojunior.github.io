@@ -43,28 +43,55 @@ function isLegacyRoute(pathname: string): boolean {
  * This should be used in Astro middleware
  * 
  * Note: With prefixDefaultLocale: false, default language (en-US) has no prefix
- * while pt-BR uses /pt prefix
+ * while pt-BR uses /pt-BR prefix as per Astro config
  */
 export function i18nMiddleware(request: Request): Response | void {
   const url = new URL(request.url);
   const pathname = url.pathname;
   
-  // Skip middleware for assets and API routes
+  // Skip middleware for static assets and special files
   if (
     pathname.startsWith('/_astro/') ||
     pathname.startsWith('/api/') ||
-    pathname.includes('.') || // Skip files with extensions
     pathname.startsWith('/robots.txt') ||
     pathname.startsWith('/sitemap') ||
     pathname.startsWith('/rss.xml') ||
-    pathname.startsWith('/og.png')
+    pathname.startsWith('/og.png') ||
+    pathname.includes('.ico') ||
+    pathname.includes('.png') ||
+    pathname.includes('.jpg') ||
+    pathname.includes('.gif') ||
+    pathname.includes('.svg') ||
+    pathname.includes('.css') ||
+    pathname.includes('.js') ||
+    pathname.includes('.woff') ||
+    pathname.includes('.woff2') ||
+    pathname.includes('.ttf')
   ) {
     return;
   }
   
-  // Check if pathname starts with Portuguese prefix
-  if (pathname.startsWith('/pt')) {
+  // Check if pathname already starts with pt-BR prefix (Portuguese locale)
+  if (pathname.startsWith('/pt-BR')) {
     return; // Already has Portuguese locale, let Astro handle it
+  }
+  
+  // Handle root path redirect based on language preference
+  if (pathname === '/') {
+    const detectedLang = detectLanguage(pathname);
+    
+    // If detected language is Portuguese, redirect to /pt-BR
+    if (detectedLang === 'pt-BR') {
+      return new Response(null, {
+        status: 302, // Temporary redirect for language detection
+        headers: {
+          Location: `${url.origin}/pt-BR${url.search}${url.hash}`,
+        },
+      });
+    }
+    
+    // For English (default), no redirect needed - serve from pages/index.astro
+    return;
   }
   
   // Check if it's a legacy route (exists in both pages/ and pages/[locale]/)
@@ -72,9 +99,9 @@ export function i18nMiddleware(request: Request): Response | void {
   if (isLegacyRoute(pathname)) {
     const detectedLang = detectLanguage(pathname);
     
-    // If detected language is Portuguese, redirect to /pt prefix
+    // If detected language is Portuguese, redirect to /pt-BR prefix
     if (detectedLang === 'pt-BR') {
-      const newPathname = `/pt${pathname}`;
+      const newPathname = `/pt-BR${pathname}`;
       
       return new Response(null, {
         status: 301, // Permanent redirect for SEO
@@ -93,9 +120,9 @@ export function i18nMiddleware(request: Request): Response | void {
   if (isDynamicLegacy) {
     const detectedLang = detectLanguage(pathname);
     
-    // If detected language is Portuguese, redirect to /pt prefix
+    // If detected language is Portuguese, redirect to /pt-BR prefix
     if (detectedLang === 'pt-BR') {
-      const newPathname = `/pt${pathname}`;
+      const newPathname = `/pt-BR${pathname}`;
       
       return new Response(null, {
         status: 301, // Permanent redirect for SEO
@@ -109,17 +136,22 @@ export function i18nMiddleware(request: Request): Response | void {
     return;
   }
   
-  // Handle unsupported language prefixes (anything that's not /pt)
+  // Handle unsupported language prefixes
   const pathSegments = pathname.split('/').filter(Boolean);
-  if (pathSegments.length > 0 && pathSegments[0].length === 2 && pathSegments[0] !== 'pt') {
-    const pathWithoutLang = pathname.replace(/^\/[^\/]+/, '');
+  if (pathSegments.length > 0) {
+    const firstSegment = pathSegments[0];
     
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: `${url.origin}${pathWithoutLang || '/'}${url.search}${url.hash}`,
-      },
-    });
+    // Check if it looks like a language code but isn't pt-BR
+    if (firstSegment.length === 2 || (firstSegment.includes('-') && firstSegment !== 'pt-BR')) {
+      const pathWithoutLang = pathname.replace(/^\/[^\/]+/, '');
+      
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: `${url.origin}${pathWithoutLang || '/'}${url.search}${url.hash}`,
+        },
+      });
+    }
   }
 }
 
@@ -174,7 +206,7 @@ export function getCanonicalURL(
   lang: Language
 ): string {
   const cleanPath = pathname.replace(/^\/[a-z]{2}(-[A-Z]{2})?/, '') || '/';
-  const langPrefix = lang === DEFAULT_LANGUAGE ? '/en' : (lang === 'pt-BR' ? '/pt' : '');
+  const langPrefix = lang === DEFAULT_LANGUAGE ? '' : (lang === 'pt-BR' ? '/pt-BR' : '');
   
   return `${baseURL}${langPrefix}${cleanPath === '/' ? '' : cleanPath}`;
 }

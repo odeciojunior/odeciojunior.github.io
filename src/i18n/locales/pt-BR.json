@@ -44,6 +44,9 @@
     "allPosts": "Todos os Posts",
     "latestPosts": "Últimos Posts",
     "popularPosts": "Posts Populares",
+    "featuredPosts": "Posts em Destaque",
+    "recentPosts": "Posts Recentes",
+    "socialLinksText": "Me encontre em",
     "backToBlog": "Voltar ao Blog"
   },
   "post": {
