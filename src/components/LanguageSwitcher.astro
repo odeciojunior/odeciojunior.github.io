@@ -1,45 +1,116 @@
 ---
-import { getLanguageFromURL, getAlternativeLanguage, getAlternateURLs, createTranslator, getAvailableLanguages } from '../i18n/utils';
+import { 
+  getLanguageFromURL, 
+  getAlternateURLs, 
+  createTranslator, 
+  getAvailableLanguages,
+  removeLanguagePrefix 
+} from '../i18n/utils';
+import { LANGUAGE_METADATA } from '../i18n/config';
+import type { Language } from '../i18n/utils';
 
 const { pathname } = Astro.url;
 const currentLang = getLanguageFromURL(pathname);
 const t = createTranslator(currentLang);
 const alternateURLs = getAlternateURLs(pathname);
 const availableLanguages = getAvailableLanguages();
+const currentLangMeta = LANGUAGE_METADATA[currentLang];
+
+// Generate proper URLs based on prefixDefaultLocale: false
+function generateLanguageURL(targetLang: Language, currentPath: string): string {
+  const cleanPath = removeLanguagePrefix(currentPath);
+  
+  if (targetLang === 'en-US') {
+    // Default locale goes to root (no prefix)
+    return cleanPath === '/' ? '/' : cleanPath;
+  } else {
+    // Non-default locales get prefixed
+    return `/pt-BR${cleanPath === '/' ? '' : cleanPath}`;
+  }
+}
 ---
 
-<div class="language-switcher">
+<div class="language-switcher" data-language-switcher-container>
   <button 
     type="button" 
     class="language-toggle"
-    aria-label={t('language.switchTo', { language: getAlternativeLanguage(currentLang) })}
+    aria-expanded="false"
+    aria-haspopup="true"
+    aria-label={t('language.current', { language: currentLangMeta.name }) + '. ' + t('common.open')}
     data-language-switcher
   >
-    <span class="current-lang">
-      {availableLanguages.find(lang => lang.code === currentLang)?.flag}
-      <span class="sr-only">{t('language.current', { language: availableLanguages.find(lang => lang.code === currentLang)?.name || 'English' })}</span>
+    <span class="current-lang-display">
+      <span class="flag" role="img" aria-label={currentLangMeta.name}>
+        {currentLangMeta.flag}
+      </span>
+      <span class="lang-code" aria-hidden="true">{currentLang.split('-')[0].toUpperCase()}</span>
     </span>
-    <svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg 
+      class="chevron" 
+      width="16" 
+      height="16" 
+      viewBox="0 0 16 16" 
+      fill="none"
+      aria-hidden="true"
+    >
+      <path 
+        d="M4 6L8 10L12 6" 
+        stroke="currentColor" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
     </svg>
   </button>
   
-  <div class="language-menu" data-language-menu>
-    {availableLanguages.map(lang => (
-      <a 
-        href={alternateURLs[lang.code]}
-        class={`language-option ${lang.code === currentLang ? 'active' : ''}`}
-        data-language={lang.code}
-        hreflang={lang.code}
-      >
-        <span class="flag">{lang.flag}</span>
-        <span class="name">{lang.name}</span>
-        {lang.code === currentLang && (
-          <span class="checkmark">✓</span>
-        )}
-      </a>
-    ))}
-  </div>
+  <ul 
+    class="language-menu" 
+    role="menu"
+    aria-label={t('language.switchTo', { language: '' }).replace(' ', '')}
+    data-language-menu
+  >
+    {availableLanguages.map(lang => {
+      const targetURL = generateLanguageURL(lang.code as Language, pathname);
+      const isActive = lang.code === currentLang;
+      
+      return (
+        <li role="none">
+          <a 
+            href={targetURL}
+            class={`language-option ${isActive ? 'active' : ''}`}
+            role="menuitem"
+            data-language={lang.code}
+            hreflang={lang.code}
+            aria-current={isActive ? 'page' : undefined}
+            tabindex="-1"
+          >
+            <span class="flag" role="img" aria-label={lang.name}>
+              {lang.flag}
+            </span>
+            <span class="name">{lang.name}</span>
+            <span class="lang-code-small" aria-hidden="true">
+              {lang.code.split('-')[0].toUpperCase()}
+            </span>
+            {isActive && (
+              <svg 
+                class="checkmark" 
+                width="16" 
+                height="16" 
+                viewBox="0 0 16 16" 
+                fill="none"
+                aria-hidden="true"
+              >
+                <path 
+                  d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" 
+                  fill="currentColor"
+                />
+              </svg>
+            )}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
 </div>
 
 <style>
@@ -51,120 +122,205 @@ const availableLanguages = getAvailableLanguages();
   .language-toggle {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 0.375rem;
-    color: inherit;
+    border: 1px solid var(--muted);
+    border-radius: var(--radius);
+    color: var(--foreground);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--transition-all);
+    font-size: var(--font-size-sm);
+    line-height: 1;
+    min-height: 2.5rem;
   }
 
   .language-toggle:hover {
-    border-color: rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border);
+    background: var(--secondary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
   }
 
-  .current-lang {
-    font-size: 1.125rem;
+  .language-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+  }
+
+  .language-toggle[aria-expanded="true"] {
+    border-color: var(--accent);
+    background: var(--secondary);
+  }
+
+  .current-lang-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .flag {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .lang-code {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-xs);
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--muted-foreground);
   }
 
   .chevron {
-    transition: transform 0.2s ease;
+    transition: var(--transition-transform);
+    color: var(--muted-foreground);
   }
 
-  .language-switcher[data-open="true"] .chevron {
+  .language-toggle[aria-expanded="true"] .chevron {
     transform: rotate(180deg);
   }
 
   .language-menu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + var(--space-sm));
     right: 0;
-    margin-top: 0.5rem;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    min-width: 150px;
+    background: var(--popover);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    min-width: 180px;
+    max-width: 220px;
+    padding: var(--space-sm);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.2s ease;
-    z-index: 50;
+    transform: translateY(-10px) scale(0.95);
+    transition: var(--transition-all);
+    z-index: var(--z-dropdown);
+    list-style: none;
+    margin: 0;
   }
 
   .language-switcher[data-open="true"] .language-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 
   .language-option {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    color: #374151;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    color: var(--popover-foreground);
     text-decoration: none;
-    transition: background-color 0.2s ease;
-    border-radius: 0.375rem;
-    margin: 0.25rem;
+    transition: var(--transition-all);
+    border-radius: var(--radius);
+    position: relative;
+    font-size: var(--font-size-sm);
   }
 
   .language-option:hover {
-    background-color: #f3f4f6;
+    background-color: var(--hover);
+    transform: translateY(-1px);
+  }
+
+  .language-option:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    background-color: var(--hover);
   }
 
   .language-option.active {
-    background-color: #eff6ff;
-    color: #2563eb;
+    background-color: var(--secondary);
+    color: var(--accent);
+    font-weight: var(--font-weight-medium);
   }
 
-  .flag {
-    font-size: 1.25rem;
+  .language-option .flag {
+    font-size: 1.375rem;
+    line-height: 1;
   }
 
-  .name {
+  .language-option .name {
     flex: 1;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .lang-code-small {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--muted-foreground);
+    opacity: 0.7;
   }
 
   .checkmark {
-    color: #10b981;
-    font-weight: bold;
+    color: var(--accent);
+    opacity: 0.8;
   }
 
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  @media (prefers-color-scheme: dark) {
+  /* Mobile responsive design */
+  @media (max-width: 768px) {
     .language-menu {
-      background: #1f2937;
-      border-color: #374151;
+      position: fixed;
+      top: auto;
+      right: var(--space-md);
+      left: var(--space-md);
+      bottom: 6rem;
+      min-width: auto;
+      max-width: none;
     }
 
     .language-option {
-      color: #d1d5db;
+      padding: var(--space-lg) var(--space-md);
+      font-size: var(--font-size-base);
     }
 
-    .language-option:hover {
-      background-color: #374151;
+    .language-option .flag {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .language-toggle {
+      border-width: 2px;
+    }
+
+    .language-menu {
+      border-width: 2px;
     }
 
     .language-option.active {
-      background-color: #1e3a8a;
-      color: #93c5fd;
+      outline: 2px solid currentColor;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .language-toggle,
+    .language-menu,
+    .language-option,
+    .chevron {
+      transition: none;
+    }
+
+    .language-option:hover {
+      transform: none;
+    }
+  }
+
+  /* Dark mode specific enhanced shadows */
+  @media (prefers-color-scheme: dark) {
+    .language-menu {
+      box-shadow: var(--shadow-xl);
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    .language-switcher {
+      display: none;
     }
   }
 </style>
@@ -172,44 +328,257 @@ const availableLanguages = getAvailableLanguages();
 <script>
   import { storeLanguagePreference } from '../i18n/utils';
 
-  function initLanguageSwitcher() {
-    const switcher = document.querySelector('[data-language-switcher]');
-    const menu = document.querySelector('[data-language-menu]');
-    const options = document.querySelectorAll('[data-language]');
+  interface LanguageSwitcherState {
+    isOpen: boolean;
+    currentFocusIndex: number;
+    options: HTMLElement[];
+  }
 
-    if (!switcher || !menu) return;
+  class LanguageSwitcher {
+    private container: HTMLElement;
+    private toggle: HTMLButtonElement;
+    private menu: HTMLElement;
+    private options: HTMLElement[];
+    private state: LanguageSwitcherState;
 
-    // Toggle menu
-    switcher.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = switcher.parentElement?.getAttribute('data-open') === 'true';
-      switcher.parentElement?.setAttribute('data-open', (!isOpen).toString());
-    });
+    constructor(container: HTMLElement) {
+      this.container = container;
+      this.toggle = container.querySelector('[data-language-switcher]') as HTMLButtonElement;
+      this.menu = container.querySelector('[data-language-menu]') as HTMLElement;
+      this.options = Array.from(container.querySelectorAll('[data-language]'));
+      
+      this.state = {
+        isOpen: false,
+        currentFocusIndex: -1,
+        options: this.options
+      };
 
-    // Close menu when clicking outside
-    document.addEventListener('click', () => {
-      switcher.parentElement?.setAttribute('data-open', 'false');
-    });
+      this.init();
+    }
 
-    // Handle language selection
-    options.forEach(option => {
-      option.addEventListener('click', (e) => {
-        const target = e.currentTarget as HTMLAnchorElement;
-        const lang = target.getAttribute('data-language');
-        if (lang) {
-          storeLanguagePreference(lang as any);
-        }
+    private init(): void {
+      if (!this.toggle || !this.menu || !this.options.length) return;
+
+      this.bindEvents();
+      this.setupAccessibility();
+    }
+
+    private bindEvents(): void {
+      // Toggle button events
+      this.toggle.addEventListener('click', this.handleToggleClick.bind(this));
+      this.toggle.addEventListener('keydown', this.handleToggleKeydown.bind(this));
+
+      // Menu events
+      this.menu.addEventListener('keydown', this.handleMenuKeydown.bind(this));
+      
+      // Option events
+      this.options.forEach((option, index) => {
+        option.addEventListener('click', this.handleOptionClick.bind(this));
+        option.addEventListener('keydown', (e) => this.handleOptionKeydown(e, index));
+        option.addEventListener('focus', () => this.state.currentFocusIndex = index);
       });
+
+      // Outside click
+      document.addEventListener('click', this.handleOutsideClick.bind(this));
+      
+      // Escape key globally
+      document.addEventListener('keydown', this.handleGlobalKeydown.bind(this));
+    }
+
+    private setupAccessibility(): void {
+      // Set initial ARIA attributes
+      this.menu.setAttribute('role', 'menu');
+      this.options.forEach(option => {
+        option.setAttribute('role', 'menuitem');
+        option.setAttribute('tabindex', '-1');
+      });
+    }
+
+    private handleToggleClick(e: Event): void {
+      e.stopPropagation();
+      this.toggleMenu();
+    }
+
+    private handleToggleKeydown(e: KeyboardEvent): void {
+      switch (e.key) {
+        case 'Enter':
+        case ' ':
+        case 'ArrowDown':
+          e.preventDefault();
+          this.openMenu();
+          this.focusFirstOption();
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          this.openMenu();
+          this.focusLastOption();
+          break;
+      }
+    }
+
+    private handleMenuKeydown(e: KeyboardEvent): void {
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          this.focusNextOption();
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          this.focusPreviousOption();
+          break;
+        case 'Home':
+          e.preventDefault();
+          this.focusFirstOption();
+          break;
+        case 'End':
+          e.preventDefault();
+          this.focusLastOption();
+          break;
+        case 'Escape':
+          e.preventDefault();
+          this.closeMenu();
+          this.toggle.focus();
+          break;
+      }
+    }
+
+    private handleOptionClick(e: Event): void {
+      const target = e.currentTarget as HTMLAnchorElement;
+      const lang = target.getAttribute('data-language');
+      
+      if (lang) {
+        storeLanguagePreference(lang as any);
+        
+        // Announce language change to screen readers
+        this.announceLanguageChange(target.textContent || lang);
+      }
+      
+      this.closeMenu();
+    }
+
+    private handleOptionKeydown(e: KeyboardEvent, index: number): void {
+      switch (e.key) {
+        case 'Enter':
+        case ' ':
+          e.preventDefault();
+          this.options[index].click();
+          break;
+      }
+    }
+
+    private handleOutsideClick(e: Event): void {
+      if (!this.container.contains(e.target as Node)) {
+        this.closeMenu();
+      }
+    }
+
+    private handleGlobalKeydown(e: KeyboardEvent): void {
+      if (e.key === 'Escape' && this.state.isOpen) {
+        this.closeMenu();
+        this.toggle.focus();
+      }
+    }
+
+    private toggleMenu(): void {
+      if (this.state.isOpen) {
+        this.closeMenu();
+      } else {
+        this.openMenu();
+      }
+    }
+
+    private openMenu(): void {
+      this.state.isOpen = true;
+      this.container.setAttribute('data-open', 'true');
+      this.toggle.setAttribute('aria-expanded', 'true');
+      
+      // Trap focus in menu
+      this.menu.addEventListener('focusout', this.handleMenuFocusOut.bind(this));
+    }
+
+    private closeMenu(): void {
+      this.state.isOpen = false;
+      this.container.setAttribute('data-open', 'false');
+      this.toggle.setAttribute('aria-expanded', 'false');
+      this.state.currentFocusIndex = -1;
+      
+      // Remove focus trap
+      this.menu.removeEventListener('focusout', this.handleMenuFocusOut.bind(this));
+    }
+
+    private handleMenuFocusOut(e: FocusEvent): void {
+      // Close menu if focus moves outside the switcher
+      if (!this.container.contains(e.relatedTarget as Node)) {
+        this.closeMenu();
+      }
+    }
+
+    private focusFirstOption(): void {
+      if (this.options.length > 0) {
+        this.state.currentFocusIndex = 0;
+        this.options[0].focus();
+      }
+    }
+
+    private focusLastOption(): void {
+      if (this.options.length > 0) {
+        this.state.currentFocusIndex = this.options.length - 1;
+        this.options[this.state.currentFocusIndex].focus();
+      }
+    }
+
+    private focusNextOption(): void {
+      if (this.options.length === 0) return;
+      
+      this.state.currentFocusIndex = (this.state.currentFocusIndex + 1) % this.options.length;
+      this.options[this.state.currentFocusIndex].focus();
+    }
+
+    private focusPreviousOption(): void {
+      if (this.options.length === 0) return;
+      
+      this.state.currentFocusIndex = this.state.currentFocusIndex <= 0 
+        ? this.options.length - 1 
+        : this.state.currentFocusIndex - 1;
+      this.options[this.state.currentFocusIndex].focus();
+    }
+
+    private announceLanguageChange(languageName: string): void {
+      // Create a temporary element to announce the change
+      const announcement = document.createElement('div');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.setAttribute('aria-atomic', 'true');
+      announcement.style.position = 'absolute';
+      announcement.style.left = '-10000px';
+      announcement.style.width = '1px';
+      announcement.style.height = '1px';
+      announcement.style.overflow = 'hidden';
+      announcement.textContent = `Language switched to ${languageName}`;
+      
+      document.body.appendChild(announcement);
+      
+      // Remove after announcement
+      setTimeout(() => {
+        document.body.removeChild(announcement);
+      }, 1000);
+    }
+  }
+
+  function initLanguageSwitchers(): void {
+    const containers = document.querySelectorAll('[data-language-switcher-container]');
+    containers.forEach(container => {
+      new LanguageSwitcher(container as HTMLElement);
     });
   }
 
   // Initialize on page load
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initLanguageSwitcher);
+    document.addEventListener('DOMContentLoaded', initLanguageSwitchers);
   } else {
-    initLanguageSwitcher();
+    initLanguageSwitchers();
   }
 
   // Reinitialize on page navigation (for SPA-like behavior)
-  document.addEventListener('astro:page-load', initLanguageSwitcher);
+  document.addEventListener('astro:page-load', initLanguageSwitchers);
+  document.addEventListener('astro:after-swap', initLanguageSwitchers);
 </script>

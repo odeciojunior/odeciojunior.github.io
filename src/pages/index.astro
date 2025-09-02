@@ -43,7 +43,7 @@ const recentPosts = sortedPosts.filter(post => !post.data.featured);
       <p>{t(currentLanguage, "blog.subtitle")}</p>
       <div class="social-wrapper">
         <div class="social-links">{t(currentLanguage, "blog.socialLinksText")}</div>
-        <div>
+        <div class="flex flex-direction: row flex-wrap">
           {
             SOCIALS.map(social => {
               const Icon = social.icon;

@@ -1,0 +1,136 @@
+---
+// Demo integration example for the LanguageSwitcher component
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
+import { getLanguageFromURL, createTranslator } from '../i18n/utils';
+
+// Get current language from URL for demo
+const currentLang = getLanguageFromURL(Astro.url.pathname);
+const t = createTranslator(currentLang);
+---
+
+<!DOCTYPE html>
+<html lang={currentLang} data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{t('common.demo')} - LanguageSwitcher</title>
+  <link rel="stylesheet" href="../styles/tokens.css">
+  <link rel="stylesheet" href="../styles/global.css">
+</head>
+<body>
+  <header style="padding: 1rem; background: var(--secondary); display: flex; justify-content: space-between; align-items: center;">
+    <h1>LanguageSwitcher Demo</h1>
+    
+    <!-- Integration example: Place the component in header/navbar -->
+    <LanguageSwitcher />
+  </header>
+  
+  <main style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+    <h2>LanguageSwitcher Component Features</h2>
+    
+    <div style="display: grid; gap: 1rem; margin: 2rem 0;">
+      <div style="padding: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);">
+        <h3>✅ Current Language Display</h3>
+        <p>Shows flag and language code (e.g., 🇺🇸 EN, 🇧🇷 PT) for current language</p>
+      </div>
+      
+      <div style="padding: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);">
+        <h3>✅ Dropdown/Toggle for Language Selection</h3>
+        <p>Click the language switcher to see available languages with flags and names</p>
+      </div>
+      
+      <div style="padding: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);">
+        <h3>✅ URL Transformation Logic</h3>
+        <p>Automatically transforms current URL to target locale:</p>
+        <ul>
+          <li><code>/about</code> → <code>/pt-BR/about</code> (when switching to Portuguese)</li>
+          <li><code>/pt-BR/posts/hello-world</code> → <code>/posts/hello-world</code> (when switching to English)</li>
+        </ul>
+      </div>
+      
+      <div style="padding: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);">
+        <h3>✅ Root vs Prefixed Paths</h3>
+        <p>Handles prefixDefaultLocale: false correctly:</p>
+        <ul>
+          <li>English (en-US): Root paths (no prefix)</li>
+          <li>Portuguese (pt-BR): Prefixed paths (/pt-BR/)</li>
+        </ul>
+      </div>
+      
+      <div style="padding: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);">
+        <h3>✅ Accessibility Features</h3>
+        <ul>
+          <li><strong>ARIA labels</strong>: Screen reader announcements</li>
+          <li><strong>Keyboard navigation</strong>: Arrow keys, Enter, Escape</li>
+          <li><strong>Focus management</strong>: Proper focus trap and restoration</li>
+          <li><strong>Role attributes</strong>: menu/menuitem semantics</li>
+          <li><strong>Live announcements</strong>: Language switch confirmation</li>
+        </ul>
+      </div>
+      
+      <div style="padding: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);">
+        <h3>✅ Icons and Visual Representation</h3>
+        <p>Uses country flags (🇺🇸, 🇧🇷) for visual language identification</p>
+      </div>
+      
+      <div style="padding: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);">
+        <h3>✅ Responsive and Mobile-Friendly</h3>
+        <p>Adapts to mobile with fixed positioning and touch-friendly sizing</p>
+      </div>
+    </div>
+    
+    <h2>Integration Instructions</h2>
+    
+    <div style="padding: 1rem; background: var(--muted); border-radius: var(--radius); margin: 1rem 0;">
+      <h3>1. Import and Use</h3>
+      <pre style="background: var(--popover); padding: 1rem; border-radius: var(--radius); overflow-x: auto;"><code>---
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
+---
+
+&lt;header&gt;
+  &lt;nav&gt;
+    &lt;!-- Your navigation items --&gt;
+    &lt;LanguageSwitcher /&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;</code></pre>
+    </div>
+    
+    <div style="padding: 1rem; background: var(--muted); border-radius: var(--radius); margin: 1rem 0;">
+      <h3>2. Required Dependencies</h3>
+      <ul>
+        <li>i18n utilities (already configured)</li>
+        <li>Translation files with language keys</li>
+        <li>Design system tokens (tokens.css)</li>
+      </ul>
+    </div>
+    
+    <div style="padding: 1rem; background: var(--muted); border-radius: var(--radius); margin: 1rem 0;">
+      <h3>3. Keyboard Navigation</h3>
+      <ul>
+        <li><kbd>Tab</kbd> - Focus the language switcher</li>
+        <li><kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>↓</kbd> - Open menu</li>
+        <li><kbd>↑</kbd> / <kbd>↓</kbd> - Navigate options</li>
+        <li><kbd>Home</kbd> / <kbd>End</kbd> - First/last option</li>
+        <li><kbd>Escape</kbd> - Close menu</li>
+        <li><kbd>Enter</kbd> - Select language</li>
+      </ul>
+    </div>
+    
+    <div style="padding: 1rem; background: var(--info); color: var(--info-foreground); border-radius: var(--radius); margin: 1rem 0;">
+      <h3>💡 Pro Tips</h3>
+      <ul>
+        <li>The component automatically stores language preference in localStorage</li>
+        <li>URL paths are preserved when switching languages</li>
+        <li>The component works with Astro's View Transitions</li>
+        <li>Dark mode styles are automatically applied</li>
+        <li>Print styles hide the component for cleaner printed pages</li>
+      </ul>
+    </div>
+  </main>
+  
+  <footer style="padding: 2rem; text-align: center; border-top: 1px solid var(--border); margin-top: 2rem;">
+    <p>Current Language: <strong>{currentLang}</strong></p>
+    <p>Page URL: <code>{Astro.url.pathname}</code></p>
+  </footer>
+</body>
+</html>

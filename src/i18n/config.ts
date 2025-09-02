@@ -34,7 +34,7 @@ export const I18N_CONFIG = {
   defaultLocale: DEFAULT_LANGUAGE,
   locales: SUPPORTED_LANGUAGES,
   routing: {
-    prefixDefaultLocale: true,
+    prefixDefaultLocale: false, // Match Astro config: en-US at root, pt-BR at /pt-BR/
     strategy: 'pathname',
   },
   fallbackLocale: DEFAULT_LANGUAGE,
