@@ -20,8 +20,13 @@ const { variant = "h2", data, id, locale = "en-US" } = Astro.props;
 const { title, description, pubDatetime, modDatetime, timezone } = data;
 
 // Generate proper URL from slug - handle both simple slugs and directory-based slugs
+// Since prefixDefaultLocale is false in astro.config, en-US should have no prefix
 const generatePostUrl = (slug: string, locale: string) => {
-  const localePrefix = locale === 'en-US' ? '/en' : locale === 'pt-BR' ? '/pt' : `/${locale}`;
+  // en-US uses root path (no prefix), pt-BR uses /pt-BR prefix
+  if (locale === 'en-US') {
+    return `/posts/${slug}/`;
+  }
+  const localePrefix = locale === 'pt-BR' ? '/pt-BR' : `/${locale}`;
   return `${localePrefix}/posts/${slug}/`;
 };
 
