@@ -54,6 +54,7 @@ export function removeLanguagePrefix(pathname: string): string {
 
 /**
  * Add language prefix to pathname
+ * @deprecated Use generateLocalizedPath instead for better handling of prefixDefaultLocale: true
  */
 export function addLanguagePrefix(pathname: string, lang: Language): string {
   const prefix = getLanguagePath(lang);
@@ -131,7 +132,7 @@ export function getAlternateURLs(pathname: string): Record<Language, string> {
   const cleanPath = removeLanguagePrefix(pathname);
   
   return SUPPORTED_LANGUAGES.reduce((acc, lang) => {
-    acc[lang] = addLanguagePrefix(cleanPath, lang);
+    acc[lang] = generateLocalizedPath(cleanPath, lang);
     return acc;
   }, {} as Record<Language, string>);
 }
@@ -273,4 +274,29 @@ export function detectLanguage(pathname: string): Language {
   
   // 3. Check browser language
   return getBrowserLanguage();
+}
+
+/**
+ * Generate proper URL path for a given language and route
+ * Handles the prefixDefaultLocale: true configuration correctly
+ */
+export function generateLocalizedPath(path: string, lang: Language): string {
+  // Remove any existing language prefix first
+  const cleanPath = removeLanguagePrefix(path);
+  
+  // Both languages now use prefixes with prefixDefaultLocale: true
+  const langPrefix = lang === 'pt-BR' ? '/pt' : '/en';
+  
+  return `${langPrefix}${cleanPath === '/' ? '' : cleanPath}`;
+}
+
+/**
+ * Generate navigation URL for a specific route and language
+ * Used primarily for navigation links in Header and other components
+ */
+export function generateNavURL(route: string, lang: Language): string {
+  // Ensure route starts with /
+  const normalizedRoute = route.startsWith('/') ? route : `/${route}`;
+  
+  return generateLocalizedPath(normalizedRoute, lang);
 }

@@ -1,5 +1,5 @@
 ---
-import { getLanguageFromURL } from "@/i18n/utils";
+import { getLanguageFromURL, generateLocalizedPath } from "@/i18n/utils";
 
 // Remove current url path and remove trailing slash if exists
 const currentUrlPath = Astro.url.pathname.replace(/\/+$/, "");
@@ -10,7 +10,6 @@ const pathSegments = currentUrlPath.split("/").slice(1);
 const breadcrumbList = pathSegments.slice(1); // Skip locale segment
 
 const currentLanguage = Astro.locals.currentLanguage || getLanguageFromURL(Astro.url.pathname);
-const localeSlug = currentLanguage === 'en-US' ? 'en' : currentLanguage === 'pt-BR' ? 'pt' : currentLanguage;
 
 // if breadcrumb is Home > Posts > 1 <etc>
 // replace Posts with Posts (page number)
@@ -34,7 +33,7 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
     class="font-light [&>li]:inline [&>li:not(:last-child)>a]:hover:opacity-100"
   >
     <li>
-      <a href={`/${localeSlug}/`} class="opacity-80">Home</a>
+      <a href={generateLocalizedPath('/', currentLanguage)} class="opacity-80">Home</a>
       <span aria-hidden="true" class="opacity-80">&raquo;</span>
     </li>
     {
@@ -51,7 +50,7 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
           </li>
         ) : (
           <li>
-            <a href={`/${localeSlug}/${breadcrumb}/`} class="capitalize opacity-70">
+            <a href={generateLocalizedPath(`/${breadcrumb}/`, currentLanguage)} class="capitalize opacity-70">
               {breadcrumb}
             </a>
             <span aria-hidden="true">&raquo;</span>

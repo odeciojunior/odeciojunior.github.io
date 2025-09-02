@@ -1,5 +1,5 @@
 ---
-import { getLanguageFromURL, createTranslator, addLanguagePrefix } from '../i18n/utils';
+import { getLanguageFromURL, createTranslator, generateNavURL } from '../i18n/utils';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 
 const { pathname } = Astro.url;
@@ -8,17 +8,17 @@ const t = createTranslator(currentLang);
 
 // Navigation items with translations
 const navItems = [
-  { href: addLanguagePrefix('/', currentLang), text: t('navigation.home') },
-  { href: addLanguagePrefix('/posts', currentLang), text: t('navigation.blog') },
-  { href: addLanguagePrefix('/about', currentLang), text: t('navigation.about') },
-  { href: addLanguagePrefix('/contact', currentLang), text: t('navigation.contact') },
+  { href: generateNavURL('/', currentLang), text: t('navigation.home') },
+  { href: generateNavURL('/posts', currentLang), text: t('navigation.blog') },
+  { href: generateNavURL('/about', currentLang), text: t('navigation.about') },
+  { href: generateNavURL('/contact', currentLang), text: t('navigation.contact') },
 ];
 ---
 
 <nav class="navigation" aria-label={t('navigation.home')}>
   <div class="nav-container">
     <div class="nav-brand">
-      <a href={addLanguagePrefix('/', currentLang)} class="brand-link">
+      <a href={generateNavURL('/', currentLang)} class="brand-link">
         <span class="brand-text">Blog</span>
       </a>
     </div>

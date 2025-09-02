@@ -9,16 +9,16 @@ export const DEFAULT_LANGUAGE: Language = 'en-US';
 
 export const SUPPORTED_LANGUAGES = Object.keys(LANGUAGES) as Language[];
 
-// URL path mapping for locales (matching Astro config)
+// URL path mapping for locales (matching Astro config with prefixDefaultLocale: true)
 export const LOCALE_PATHS = {
-  'en-US': '', // Default locale has no prefix (prefixDefaultLocale: false)
-  'pt-BR': '/pt-BR',
+  'en-US': '/en', // Default locale now has prefix (prefixDefaultLocale: true)
+  'pt-BR': '/pt',
 } as const;
 
 // Reverse mapping for path to locale
 export const PATH_TO_LOCALE = {
-  '': 'en-US', // Root path maps to default locale
-  '/pt-BR': 'pt-BR',
+  '/en': 'en-US',
+  '/pt': 'pt-BR',
 } as const;
 
 // Default routes that don't need locale prefix (redirect to default language)
@@ -34,7 +34,7 @@ export const I18N_CONFIG = {
   defaultLocale: DEFAULT_LANGUAGE,
   locales: SUPPORTED_LANGUAGES,
   routing: {
-    prefixDefaultLocale: false, // Match Astro config: en-US at root, pt-BR at /pt-BR/
+    prefixDefaultLocale: true, // Match Astro config: en-US at /en, pt-BR at /pt
     strategy: 'pathname',
   },
   fallbackLocale: DEFAULT_LANGUAGE,

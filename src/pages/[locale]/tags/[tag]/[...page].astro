@@ -84,7 +84,7 @@ Astro.locals.currentLanguage = currentLocale;
     </ul>
   </Main>
 
-  <Pagination page={page} locale={localeSlug} />
+  <Pagination page={page} locale={currentLocale} />
 
   <Footer noMarginTop={page.lastPage > 1} />
 </Layout>

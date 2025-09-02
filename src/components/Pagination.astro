@@ -4,23 +4,22 @@ import type { CollectionEntry } from "astro:content";
 import IconArrowLeft from "@/assets/icons/IconArrowLeft.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import LinkButton from "./LinkButton.astro";
-import { getLanguageFromURL, createTranslator } from "@/i18n/utils";
+import { getLanguageFromURL, createTranslator, generateLocalizedPath, type Language } from "@/i18n/utils";
 
 export interface Props {
   page: Page<CollectionEntry<"blog">>;
-  locale?: string;
+  locale?: Language;
 }
 
 const { page, locale } = Astro.props;
 
 // Get current language
-const currentLanguage = Astro.locals.currentLanguage || getLanguageFromURL(Astro.url.pathname);
-const localeSlug = locale || (currentLanguage === 'en-US' ? 'en' : currentLanguage === 'pt-BR' ? 'pt' : currentLanguage);
+const currentLanguage = locale || Astro.locals.currentLanguage || getLanguageFromURL(Astro.url.pathname);
 const t = createTranslator(currentLanguage);
 
-// Update pagination URLs to include locale
-const prevUrl = page.url.prev ? `/${localeSlug}${page.url.prev}` : null;
-const nextUrl = page.url.next ? `/${localeSlug}${page.url.next}` : null;
+// Update pagination URLs to include proper locale paths
+const prevUrl = page.url.prev ? generateLocalizedPath(page.url.prev, currentLanguage) : null;
+const nextUrl = page.url.next ? generateLocalizedPath(page.url.next, currentLanguage) : null;
 ---
 
 {

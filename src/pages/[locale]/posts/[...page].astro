@@ -68,7 +68,7 @@ const localeSlug = currentLocale === 'en-US' ? 'en' : currentLocale === 'pt-BR' 
     </ul>
   </Main>
 
-  <Pagination page={page} locale={localeSlug} />
+  <Pagination page={page} locale={currentLocale} />
 
   <Footer noMarginTop={page.lastPage > 1} />
 </Layout>

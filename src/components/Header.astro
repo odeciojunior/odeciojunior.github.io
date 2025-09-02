@@ -8,11 +8,10 @@ import LinkButton from "./LinkButton.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { SITE } from "@/config";
-import { getLanguageFromURL, createTranslator } from "@/i18n/utils";
+import { getLanguageFromURL, createTranslator, generateNavURL } from "@/i18n/utils";
 
 const { pathname } = Astro.url;
 const currentLanguage = Astro.locals.currentLanguage || getLanguageFromURL(pathname);
-const localeSlug = currentLanguage === 'en-US' ? 'en' : currentLanguage === 'pt-BR' ? 'pt' : currentLanguage;
 const t = createTranslator(currentLanguage);
 
 // Remove trailing slash from current pathname if exists
@@ -20,10 +19,15 @@ const currentPath =
   pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
 
 const isActive = (path: string) => {
-  const currentPathArray = currentPath.split("/").filter(p => p.trim());
-  const pathArray = path.split("/").filter(p => p.trim());
-
-  return currentPath === path || currentPathArray[1] === pathArray[1]; // Skip locale segment
+  // For English (default), compare directly
+  // For Portuguese, skip the locale segment for comparison
+  if (currentLanguage === 'en-US') {
+    return currentPath === path || currentPath.startsWith(path + '/');
+  } else {
+    const currentWithoutLocale = currentPath.replace(/^\/pt-BR/, '') || '/';
+    const pathWithoutLocale = path.replace(/^\/pt-BR/, '') || '/';
+    return currentWithoutLocale === pathWithoutLocale || currentWithoutLocale.startsWith(pathWithoutLocale + '/');
+  }
 };
 ---
 
@@ -45,7 +49,7 @@ const isActive = (path: string) => {
       class="relative flex w-full items-center justify-between bg-background px-4 py-3 sm:py-4"
     >
       <a
-        href={`/${localeSlug}/`}
+        href={generateNavURL('/', currentLanguage)}
         class="relative z-10 text-xl font-semibold whitespace-nowrap transition-colors duration-200 hover:text-accent sm:text-2xl"
         aria-label={`${SITE.title} - Homepage`}
       >
@@ -60,10 +64,10 @@ const isActive = (path: string) => {
         <ul class="flex items-center gap-6">
           <li>
             <a 
-              href={`/${localeSlug}/posts`} 
+              href={generateNavURL('/posts', currentLanguage)} 
               class:list={[
                 "nav-link",
-                { "active-nav": isActive(`/${localeSlug}/posts`) }
+                { "active-nav": isActive(generateNavURL('/posts', currentLanguage)) }
               ]}
             >
               {t('navigation.blog')}
@@ -71,10 +75,10 @@ const isActive = (path: string) => {
           </li>
           <li>
             <a 
-              href={`/${localeSlug}/tags`}
+              href={generateNavURL('/tags', currentLanguage)}
               class:list={[
                 "nav-link", 
-                { "active-nav": isActive(`/${localeSlug}/tags`) }
+                { "active-nav": isActive(generateNavURL('/tags', currentLanguage)) }
               ]}
             >
               {t('navigation.tags')}
@@ -82,10 +86,10 @@ const isActive = (path: string) => {
           </li>
           <li>
             <a 
-              href={`/${localeSlug}/about`}
+              href={generateNavURL('/about', currentLanguage)}
               class:list={[
                 "nav-link",
-                { "active-nav": isActive(`/${localeSlug}/about`) }
+                { "active-nav": isActive(generateNavURL('/about', currentLanguage)) }
               ]}
             >
               {t('navigation.about')}
@@ -94,11 +98,11 @@ const isActive = (path: string) => {
           {SITE.showArchives && (
             <li>
               <LinkButton
-                href={`/${localeSlug}/archives`}
+                href={generateNavURL('/archives', currentLanguage)}
                 class:list={[
                   "nav-icon-button",
                   {
-                    "active-nav [&>svg]:stroke-accent": isActive(`/${localeSlug}/archives`),
+                    "active-nav [&>svg]:stroke-accent": isActive(generateNavURL('/archives', currentLanguage)),
                   },
                 ]}
                 ariaLabel={t('navigation.archive')}
@@ -110,10 +114,10 @@ const isActive = (path: string) => {
           )}
           <li>
             <LinkButton
-              href={`/${localeSlug}/search`}
+              href={generateNavURL('/search', currentLanguage)}
               class:list={[
                 "nav-icon-button",
-                { "[&>svg]:stroke-accent": isActive(`/${localeSlug}/search`) },
+                { "[&>svg]:stroke-accent": isActive(generateNavURL('/search', currentLanguage)) },
               ]}
               ariaLabel={t('common.search')}
               title={t('common.search')}
@@ -164,10 +168,10 @@ const isActive = (path: string) => {
       >
         <li>
           <a 
-            href={`/${localeSlug}/posts`} 
+            href={generateNavURL('/posts', currentLanguage)} 
             class:list={[
               "mobile-nav-link",
-              { "active-nav": isActive(`/${localeSlug}/posts`) }
+              { "active-nav": isActive(generateNavURL('/posts', currentLanguage)) }
             ]}
           >
             {t('navigation.blog')}
@@ -175,10 +179,10 @@ const isActive = (path: string) => {
         </li>
         <li>
           <a 
-            href={`/${localeSlug}/tags`}
+            href={generateNavURL('/tags', currentLanguage)}
             class:list={[
               "mobile-nav-link",
-              { "active-nav": isActive(`/${localeSlug}/tags`) }
+              { "active-nav": isActive(generateNavURL('/tags', currentLanguage)) }
             ]}
           >
             {t('navigation.tags')}
@@ -186,10 +190,10 @@ const isActive = (path: string) => {
         </li>
         <li>
           <a 
-            href={`/${localeSlug}/about`}
+            href={generateNavURL('/about', currentLanguage)}
             class:list={[
               "mobile-nav-link",
-              { "active-nav": isActive(`/${localeSlug}/about`) }
+              { "active-nav": isActive(generateNavURL('/about', currentLanguage)) }
             ]}
           >
             {t('navigation.about')}
@@ -198,11 +202,11 @@ const isActive = (path: string) => {
         {SITE.showArchives && (
           <li>
             <LinkButton
-              href={`/${localeSlug}/archives`}
+              href={generateNavURL('/archives', currentLanguage)}
               class:list={[
                 "mobile-nav-icon-link",
                 {
-                  "active-nav [&>svg]:stroke-accent": isActive(`/${localeSlug}/archives`),
+                  "active-nav [&>svg]:stroke-accent": isActive(generateNavURL('/archives', currentLanguage)),
                 },
               ]}
               ariaLabel={t('navigation.archive')}
@@ -215,10 +219,10 @@ const isActive = (path: string) => {
         )}
         <li>
           <LinkButton
-            href={`/${localeSlug}/search`}
+            href={generateNavURL('/search', currentLanguage)}
             class:list={[
               "mobile-nav-icon-link",
-              { "active-nav [&>svg]:stroke-accent": isActive(`/${localeSlug}/search`) },
+              { "active-nav [&>svg]:stroke-accent": isActive(generateNavURL('/search', currentLanguage)) },
             ]}
             ariaLabel={t('common.search')}
             title={t('common.search')}

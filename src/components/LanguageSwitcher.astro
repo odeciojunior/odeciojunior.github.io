@@ -1,10 +1,9 @@
 ---
 import { 
   getLanguageFromURL, 
-  getAlternateURLs, 
   createTranslator, 
   getAvailableLanguages,
-  removeLanguagePrefix 
+  generateLocalizedPath 
 } from '../i18n/utils';
 import { LANGUAGE_METADATA } from '../i18n/config';
 import type { Language } from '../i18n/utils';
@@ -12,21 +11,13 @@ import type { Language } from '../i18n/utils';
 const { pathname } = Astro.url;
 const currentLang = getLanguageFromURL(pathname);
 const t = createTranslator(currentLang);
-const alternateURLs = getAlternateURLs(pathname);
+// Removed alternateURLs as it's not used
 const availableLanguages = getAvailableLanguages();
 const currentLangMeta = LANGUAGE_METADATA[currentLang];
 
 // Generate proper URLs based on prefixDefaultLocale: false
 function generateLanguageURL(targetLang: Language, currentPath: string): string {
-  const cleanPath = removeLanguagePrefix(currentPath);
-  
-  if (targetLang === 'en-US') {
-    // Default locale goes to root (no prefix)
-    return cleanPath === '/' ? '/' : cleanPath;
-  } else {
-    // Non-default locales get prefixed
-    return `/pt-BR${cleanPath === '/' ? '' : cleanPath}`;
-  }
+  return generateLocalizedPath(currentPath, targetLang);
 }
 ---
 

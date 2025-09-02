@@ -55,12 +55,8 @@ class SystemTheme {
   static addListener(callback) {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     
-    // Use the newer addEventListener if available, fallback to addListener
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener("change", callback);
-    } else if (mediaQuery.addListener) {
-      mediaQuery.addListener(callback);
-    }
+    // Use addEventListener (modern approach, supported in all modern browsers)
+    mediaQuery.addEventListener("change", callback);
     
     return mediaQuery;
   }
@@ -205,15 +201,20 @@ function initializeThemeSystem() {
   }
 }
 
-// Enhanced system theme listener
+// Enhanced system theme listener with cleanup
+let systemThemeMediaQuery = null;
+let systemThemeCallback = null;
+
 function setupSystemThemeListener() {
-  SystemTheme.addListener(() => {
+  systemThemeCallback = () => {
     // Only update if current theme is system
     if (currentTheme === THEMES.SYSTEM) {
       reflectPreference();
       dispatchThemeChangeEvent();
     }
-  });
+  };
+  
+  systemThemeMediaQuery = SystemTheme.addListener(systemThemeCallback);
 }
 
 // Enhanced page transition handling
@@ -248,6 +249,17 @@ if (document.readyState === "loading") {
   setupPageTransitions();
 }
 
+// Cleanup function for event listeners
+function cleanup() {
+  if (systemThemeMediaQuery && systemThemeCallback) {
+    systemThemeMediaQuery.removeEventListener("change", systemThemeCallback);
+  }
+}
+
+// Add cleanup on page unload
+window.addEventListener("beforeunload", cleanup);
+window.addEventListener("pagehide", cleanup);
+
 // Global API for external theme control
 window.themeSystem = {
   get current() { return currentTheme; },
@@ -255,5 +267,6 @@ window.themeSystem = {
   set: setPreference,
   cycle: cycleTheme,
   isSystem: () => currentTheme === THEMES.SYSTEM,
-  themes: THEMES
+  themes: THEMES,
+  cleanup: cleanup
 };

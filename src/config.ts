@@ -3,7 +3,7 @@ export const SITE = {
   author: "Odécio Machado",
   profile: "https://odecio.link/",
   desc: "Um blog sobre tecnologia, programação e desenvolvimento pessoal.",
-  title: "Blog: Desce o Machado",
+  title: "Desce o Machado",
   ogImage: "astropaper-og.jpg",
   lightAndDarkMode: true,
   postPerIndex: 4,
