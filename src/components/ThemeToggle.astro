@@ -1,0 +1,226 @@
+---
+/**
+ * Standalone ThemeToggle Component
+ * Reusable theme toggle button with enhanced accessibility and UX
+ */
+
+import IconMoon from "@/assets/icons/IconMoon.svg";
+import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
+
+interface Props {
+  class?: string;
+  size?: "sm" | "md" | "lg";
+  showLabel?: boolean;
+}
+
+const { 
+  class: className = "", 
+  size = "md",
+  showLabel = false
+} = Astro.props;
+
+const sizeClasses = {
+  sm: "size-8 p-2",
+  md: "size-10 p-2.5", 
+  lg: "size-12 p-3"
+};
+
+const iconSizes = {
+  sm: "size-4",
+  md: "size-5",
+  lg: "size-6"
+};
+---
+
+<theme-toggle class={`inline-flex items-center gap-2 ${className}`}>
+  <button
+    id="theme-btn"
+    class:list={[
+      "focus-outline relative rounded-md transition-all duration-200",
+      "hover:bg-hover active:bg-active",
+      "hover:[&>svg]:stroke-accent",
+      sizeClasses[size],
+      className
+    ]}
+    title="Toggle theme"
+    aria-label="Toggle between light and dark themes"
+    aria-live="polite"
+    type="button"
+  >
+    <!-- Light mode icon (visible in dark theme) -->
+    <IconSunHigh 
+      class:list={[
+        "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+        "scale-100 rotate-0 transition-all duration-300 ease-out",
+        "dark:scale-0 dark:-rotate-90 dark:duration-200",
+        iconSizes[size]
+      ]}
+    />
+    
+    <!-- Dark mode icon (visible in light theme) -->
+    <IconMoon 
+      class:list={[
+        "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2", 
+        "scale-0 rotate-90 transition-all duration-200",
+        "dark:scale-100 dark:rotate-0 dark:duration-300 dark:ease-out",
+        iconSizes[size]
+      ]}
+    />
+    
+    <span class="sr-only">Toggle theme</span>
+  </button>
+  
+  {showLabel && (
+    <span 
+      class="text-sm text-muted-foreground select-none"
+      id="theme-label"
+    >
+      Theme
+    </span>
+  )}
+</theme-toggle>
+
+<script>
+  class ThemeToggle extends HTMLElement {
+    private button: HTMLButtonElement | null = null;
+    private label: HTMLSpanElement | null = null;
+
+    constructor() {
+      super();
+      this.init();
+    }
+
+    private init() {
+      this.button = this.querySelector('#theme-btn');
+      this.label = this.querySelector('#theme-label');
+      
+      if (this.button) {
+        this.setupEventListeners();
+        this.updateAccessibility();
+      }
+    }
+
+    private setupEventListeners() {
+      // Listen for theme changes from the global theme system
+      document.addEventListener('themechange', this.handleThemeChange.bind(this) as EventListener);
+      
+      // Update accessibility on initial load
+      document.addEventListener('DOMContentLoaded', () => {
+        this.updateAccessibility();
+      });
+    }
+
+    private handleThemeChange(_event: CustomEvent) {
+      this.updateAccessibility();
+      
+      // Optional: Add visual feedback
+      this.addFeedback();
+    }
+
+    private updateAccessibility() {
+      if (!this.button) return;
+
+      // Get current theme from global theme system
+      const currentTheme = (window as any).themeSystem?.resolved || 'light';
+      
+      const labels = {
+        light: 'Switch to dark theme',
+        dark: 'Switch to light theme'
+      };
+
+      const titles = {
+        light: 'Currently light theme. Click to switch to dark theme.',
+        dark: 'Currently dark theme. Click to switch to light theme.'
+      };
+
+      this.button.setAttribute('aria-label', labels[currentTheme as keyof typeof labels] || 'Toggle theme');
+      this.button.setAttribute('title', titles[currentTheme as keyof typeof titles] || 'Toggle theme');
+
+      if (this.label) {
+        this.label.textContent = `Theme: ${currentTheme}`;
+      }
+    }
+
+    private addFeedback() {
+      if (!this.button) return;
+
+      // Add a subtle animation feedback
+      this.button.style.transform = 'scale(0.95)';
+      
+      requestAnimationFrame(() => {
+        if (this.button) {
+          this.button.style.transform = 'scale(1)';
+        }
+      });
+    }
+
+    // Re-initialize on navigation (for SPAs/view transitions)
+    connectedCallback() {
+      // Re-run init after a brief delay to ensure DOM is ready
+      setTimeout(() => this.init(), 0);
+    }
+  }
+
+  // Define custom element
+  if ('customElements' in window) {
+    customElements.define('theme-toggle', ThemeToggle);
+  }
+</script>
+
+<style>
+  theme-toggle {
+    display: inline-flex;
+  }
+
+  /* Enhanced button styling */
+  #theme-btn {
+    position: relative;
+    overflow: hidden;
+  }
+
+  #theme-btn:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--color-accent);
+    opacity: 0.1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+
+  #theme-btn:active:before {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Smooth icon transitions */
+  #theme-btn svg {
+    transition: 
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    #theme-btn {
+      border: 1px solid var(--color-border);
+    }
+    
+    #theme-btn:focus-visible {
+      outline-width: 3px;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    #theme-btn,
+    #theme-btn svg,
+    #theme-btn:before {
+      transition-duration: 0.1s;
+    }
+  }
+</style>

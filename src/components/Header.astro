@@ -1,12 +1,11 @@
 ---
 import Hr from "./Hr.astro";
 import IconX from "@/assets/icons/IconX.svg";
-import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconArchive from "@/assets/icons/IconArchive.svg";
-import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import LinkButton from "./LinkButton.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 import { SITE } from "@/config";
 import { getLanguageFromURL, createTranslator } from "@/i18n/utils";
 
@@ -27,11 +26,12 @@ const isActive = (path: string) => {
 };
 ---
 
-<header>
+<header class="sticky top-0 z-fixed bg-background/80 backdrop-blur-md border-b border-border/50 transition-all duration-300">
   <a
     id="skip-to-content"
     href="#main-content"
-    class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"
+    class="absolute left-4 -top-full z-tooltip bg-background px-4 py-2 text-accent rounded-md shadow-md backdrop-blur-lg transition-all duration-200 focus:top-4"
+    tabindex="0"
   >
     {t('common.skipToContent')}
   </a>
@@ -41,132 +41,598 @@ const isActive = (path: string) => {
   >
     <div
       id="top-nav-wrap"
-      class="relative flex w-full items-baseline justify-between bg-background p-4 sm:items-center sm:py-6"
+      class="relative flex w-full items-center justify-between bg-background px-4 py-3 sm:py-4"
     >
       <a
         href={`/${localeSlug}/`}
-        class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
+        class="relative z-10 text-xl font-semibold whitespace-nowrap transition-colors duration-200 hover:text-accent sm:text-2xl"
+        aria-label={`${SITE.title} - Homepage`}
       >
         {SITE.title}
       </a>
+      
+      <!-- Desktop Navigation -->
       <nav
-        id="nav-menu"
-        class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"
+        class="hidden sm:flex items-center gap-6"
+        aria-label="Main navigation"
       >
-        <button
-          id="menu-btn"
-          class="focus-outline self-end p-2 sm:hidden"
-          aria-label="Open Menu"
-          aria-expanded="false"
-          aria-controls="menu-items"
-        >
-          <IconX id="close-icon" class="hidden" />
-          <IconMenuDeep id="menu-icon" />
-        </button>
-        <ul
-          id="menu-items"
-          class:list={[
-            "mt-4 grid w-44 grid-cols-2 place-content-center gap-2",
-            "[&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium [&>li>a]:hover:text-accent sm:[&>li>a]:px-2 sm:[&>li>a]:py-1",
-            "hidden",
-            "sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0",
-          ]}
-        >
-          <li class="col-span-2">
-            <a href={`/${localeSlug}/posts`} class:list={{ "active-nav": isActive(`/${localeSlug}/posts`) }}>
+        <ul class="flex items-center gap-6">
+          <li>
+            <a 
+              href={`/${localeSlug}/posts`} 
+              class:list={[
+                "nav-link",
+                { "active-nav": isActive(`/${localeSlug}/posts`) }
+              ]}
+            >
               {t('navigation.blog')}
             </a>
           </li>
-          <li class="col-span-2">
-            <a href={`/${localeSlug}/tags`} class:list={{ "active-nav": isActive(`/${localeSlug}/tags`) }}>
+          <li>
+            <a 
+              href={`/${localeSlug}/tags`}
+              class:list={[
+                "nav-link", 
+                { "active-nav": isActive(`/${localeSlug}/tags`) }
+              ]}
+            >
               {t('navigation.tags')}
             </a>
           </li>
-          <li class="col-span-2">
-            <a href={`/${localeSlug}/about`} class:list={{ "active-nav": isActive(`/${localeSlug}/about`) }}>
+          <li>
+            <a 
+              href={`/${localeSlug}/about`}
+              class:list={[
+                "nav-link",
+                { "active-nav": isActive(`/${localeSlug}/about`) }
+              ]}
+            >
               {t('navigation.about')}
             </a>
           </li>
-          {
-            SITE.showArchives && (
-              <li class="col-span-2">
-                <LinkButton
-                  href={`/${localeSlug}/archives`}
-                  class:list={[
-                    "focus-outline flex justify-center p-3 sm:p-1",
-                    {
-                      "active-nav [&>svg]:stroke-accent": isActive(`/${localeSlug}/archives`),
-                    },
-                  ]}
-                  ariaLabel={t('navigation.archive')}
-                  title={t('navigation.archive')}
-                >
-                  <IconArchive class="hidden sm:inline-block" />
-                  <span class="sm:sr-only">{t('navigation.archive')}</span>
-                </LinkButton>
-              </li>
-            )
-          }
-          <li class="col-span-1 flex items-center justify-center">
+          {SITE.showArchives && (
+            <li>
+              <LinkButton
+                href={`/${localeSlug}/archives`}
+                class:list={[
+                  "nav-icon-button",
+                  {
+                    "active-nav [&>svg]:stroke-accent": isActive(`/${localeSlug}/archives`),
+                  },
+                ]}
+                ariaLabel={t('navigation.archive')}
+                title={t('navigation.archive')}
+              >
+                <IconArchive class="size-5" />
+              </LinkButton>
+            </li>
+          )}
+          <li>
             <LinkButton
               href={`/${localeSlug}/search`}
               class:list={[
-                "focus-outline flex p-3 sm:p-1",
+                "nav-icon-button",
                 { "[&>svg]:stroke-accent": isActive(`/${localeSlug}/search`) },
               ]}
               ariaLabel={t('common.search')}
               title={t('common.search')}
             >
-              <IconSearch />
-              <span class="sr-only">{t('common.search')}</span>
+              <IconSearch class="size-5" />
             </LinkButton>
           </li>
-          {
-            SITE.lightAndDarkMode && (
-              <li class="col-span-1 flex items-center justify-center">
-                <button
-                  id="theme-btn"
-                  class="focus-outline relative size-12 p-4 sm:size-8 hover:[&>svg]:stroke-accent"
-                  title={t('theme.toggle')}
-                  aria-label={t('theme.system')}
-                  aria-live="polite"
-                >
-                  <IconMoon class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                  <IconSunHigh class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-                </button>
-              </li>
-            )
-          }
+          {SITE.lightAndDarkMode && (
+            <li>
+              <ThemeToggle size="md" class="nav-icon-button" />
+            </li>
+          )}
         </ul>
       </nav>
+
+      <!-- Mobile Menu Button -->
+      <div class="flex items-center gap-3 sm:hidden">
+        {SITE.lightAndDarkMode && (
+          <ThemeToggle size="sm" />
+        )}
+        <button
+          id="menu-btn"
+          class="mobile-menu-button"
+          aria-label="Open Menu"
+          aria-expanded="false"
+          aria-controls="menu-items"
+          type="button"
+        >
+          <IconX id="close-icon" class="menu-icon hidden" />
+          <IconMenuDeep id="menu-icon" class="menu-icon" />
+        </button>
+      </div>
     </div>
+
+    <!-- Mobile Navigation Menu -->
+    <nav
+      id="mobile-nav"
+      class="w-full bg-background border-t border-border/50 sm:hidden"
+      aria-label="Mobile navigation"
+    >
+      <ul
+        id="menu-items"
+        class="mobile-menu-items"
+      >
+        <li>
+          <a 
+            href={`/${localeSlug}/posts`} 
+            class:list={[
+              "mobile-nav-link",
+              { "active-nav": isActive(`/${localeSlug}/posts`) }
+            ]}
+          >
+            {t('navigation.blog')}
+          </a>
+        </li>
+        <li>
+          <a 
+            href={`/${localeSlug}/tags`}
+            class:list={[
+              "mobile-nav-link",
+              { "active-nav": isActive(`/${localeSlug}/tags`) }
+            ]}
+          >
+            {t('navigation.tags')}
+          </a>
+        </li>
+        <li>
+          <a 
+            href={`/${localeSlug}/about`}
+            class:list={[
+              "mobile-nav-link",
+              { "active-nav": isActive(`/${localeSlug}/about`) }
+            ]}
+          >
+            {t('navigation.about')}
+          </a>
+        </li>
+        {SITE.showArchives && (
+          <li>
+            <LinkButton
+              href={`/${localeSlug}/archives`}
+              class:list={[
+                "mobile-nav-icon-link",
+                {
+                  "active-nav [&>svg]:stroke-accent": isActive(`/${localeSlug}/archives`),
+                },
+              ]}
+              ariaLabel={t('navigation.archive')}
+              title={t('navigation.archive')}
+            >
+              <IconArchive class="size-5 mr-3" />
+              <span>{t('navigation.archive')}</span>
+            </LinkButton>
+          </li>
+        )}
+        <li>
+          <LinkButton
+            href={`/${localeSlug}/search`}
+            class:list={[
+              "mobile-nav-icon-link",
+              { "active-nav [&>svg]:stroke-accent": isActive(`/${localeSlug}/search`) },
+            ]}
+            ariaLabel={t('common.search')}
+            title={t('common.search')}
+          >
+            <IconSearch class="size-5 mr-3" />
+            <span>{t('common.search')}</span>
+          </LinkButton>
+        </li>
+      </ul>
+    </nav>
   </div>
   <Hr />
 </header>
 
 <script>
-  function toggleNav() {
-    const menuBtn = document.querySelector("#menu-btn");
-    const menuItems = document.querySelector("#menu-items");
-    const menuIcon = document.querySelector("#menu-icon");
-    const closeIcon = document.querySelector("#close-icon");
+  /**
+   * Enhanced Header Navigation with Animations and Accessibility
+   */
+  
+  class HeaderNavigation {
+    private menuBtn: HTMLButtonElement | null = null;
+    private mobileNav: HTMLElement | null = null;
+    private menuItems: HTMLUListElement | null = null;
+    private menuIcon: HTMLElement | null = null;
+    private closeIcon: HTMLElement | null = null;
+    private isOpen: boolean = false;
 
-    if (!menuBtn || !menuItems || !menuIcon || !closeIcon) return;
+    constructor() {
+      this.init();
+    }
 
-    menuBtn.addEventListener("click", () => {
-      const openMenu = menuBtn.getAttribute("aria-expanded") === "true";
+    private init() {
+      // Get DOM elements
+      this.menuBtn = document.querySelector("#menu-btn");
+      this.mobileNav = document.querySelector("#mobile-nav");
+      this.menuItems = document.querySelector("#menu-items");
+      this.menuIcon = document.querySelector("#menu-icon");
+      this.closeIcon = document.querySelector("#close-icon");
 
-      menuBtn.setAttribute("aria-expanded", openMenu ? "false" : "true");
-      menuBtn.setAttribute("aria-label", openMenu ? "Open Menu" : "Close Menu"); // TODO: Add i18n support for dynamic attributes
+      if (!this.menuBtn || !this.mobileNav || !this.menuItems) return;
 
-      menuItems.classList.toggle("hidden");
-      menuIcon.classList.toggle("hidden");
-      closeIcon.classList.toggle("hidden");
-    });
+      // Setup event listeners
+      this.setupEventListeners();
+      
+      // Initialize state
+      this.closeMenu();
+    }
+
+    private setupEventListeners() {
+      if (!this.menuBtn) return;
+
+      // Menu button click
+      this.menuBtn.addEventListener("click", this.toggleMenu.bind(this));
+
+      // Keyboard navigation
+      this.menuBtn.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && this.isOpen) {
+          this.closeMenu();
+        }
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener("click", (e) => {
+        if (this.isOpen && this.mobileNav && !this.mobileNav.contains(e.target as Node)) {
+          this.closeMenu();
+        }
+      });
+
+      // Handle window resize
+      window.addEventListener("resize", () => {
+        if (window.innerWidth >= 640 && this.isOpen) {
+          this.closeMenu();
+        }
+      });
+
+      // Close menu on route navigation
+      document.addEventListener("astro:page-load", () => {
+        this.closeMenu();
+      });
+    }
+
+    private toggleMenu() {
+      this.isOpen ? this.closeMenu() : this.openMenu();
+    }
+
+    private openMenu() {
+      if (!this.menuBtn || !this.mobileNav || !this.menuItems) return;
+
+      this.isOpen = true;
+
+      // Update button state
+      this.menuBtn.setAttribute("aria-expanded", "true");
+      this.menuBtn.setAttribute("aria-label", "Close Menu");
+
+      // Show mobile navigation with animation
+      this.mobileNav.style.display = "block";
+      
+      // Add animation classes
+      requestAnimationFrame(() => {
+        this.mobileNav?.classList.add("mobile-nav-open");
+        this.menuItems?.classList.add("mobile-menu-open");
+      });
+
+      // Toggle icons
+      this.menuIcon?.classList.add("hidden");
+      this.closeIcon?.classList.remove("hidden");
+
+      // Prevent body scroll
+      document.body.style.overflow = "hidden";
+
+      // Focus management
+      this.menuItems.focus();
+    }
+
+    private closeMenu() {
+      if (!this.menuBtn || !this.mobileNav || !this.menuItems) return;
+
+      this.isOpen = false;
+
+      // Update button state
+      this.menuBtn.setAttribute("aria-expanded", "false");
+      this.menuBtn.setAttribute("aria-label", "Open Menu");
+
+      // Remove animation classes
+      this.mobileNav.classList.remove("mobile-nav-open");
+      this.menuItems.classList.remove("mobile-menu-open");
+
+      // Hide mobile navigation after animation
+      setTimeout(() => {
+        if (this.mobileNav && !this.isOpen) {
+          this.mobileNav.style.display = "none";
+        }
+      }, 300);
+
+      // Toggle icons
+      this.menuIcon?.classList.remove("hidden");
+      this.closeIcon?.classList.add("hidden");
+
+      // Restore body scroll
+      document.body.style.overflow = "";
+
+      // Return focus to menu button
+      this.menuBtn.focus();
+    }
+
+    // Public method for external use
+    public close() {
+      this.closeMenu();
+    }
   }
 
-  toggleNav();
+  // Initialize header navigation
+  let headerNav: HeaderNavigation;
 
-  // Runs on view transitions navigation
-  document.addEventListener("astro:after-swap", toggleNav);
+  function initializeHeaderNav() {
+    headerNav = new HeaderNavigation();
+    // Make header nav available globally for debugging
+    (window as any).headerNav = headerNav;
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeHeaderNav);
+  } else {
+    initializeHeaderNav();
+  }
+
+  // Reinitialize on navigation (for SPAs/view transitions)
+  document.addEventListener("astro:after-swap", initializeHeaderNav);
 </script>
+
+<style>
+  /* ===== HEADER STYLING WITH DESIGN TOKENS ===== */
+  
+  header {
+    /* Use design tokens for consistent spacing and colors */
+    border-bottom: 1px solid rgb(var(--color-border) / 0.5);
+    background: rgb(var(--color-background) / 0.8);
+    backdrop-filter: blur(12px);
+  }
+
+  /* ===== NAVIGATION LINK STYLES ===== */
+  
+  .nav-link {
+    position: relative;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-foreground);
+    transition: all 200ms ease-out;
+    border-radius: 0.375rem;
+  }
+  
+  .nav-link:hover {
+    color: var(--color-accent);
+  }
+  
+  .nav-link:focus-visible {
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .nav-link:before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--color-accent);
+    border-radius: 1px;
+    transition: all var(--duration-normal) var(--ease-out);
+    transform: translateX(-50%);
+  }
+
+  .nav-link:hover:before,
+  .nav-link.active-nav:before {
+    width: 100%;
+  }
+
+  .nav-link.active-nav {
+    color: var(--color-accent);
+  }
+
+  /* ===== ICON BUTTON STYLES ===== */
+  
+  .nav-icon-button {
+    position: relative;
+    padding: 0.5rem;
+    color: var(--color-foreground);
+    transition: all 200ms;
+    border-radius: 0.375rem;
+  }
+  
+  .nav-icon-button:hover {
+    color: var(--color-accent);
+    background-color: var(--color-hover);
+  }
+  
+  .nav-icon-button:focus-visible {
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .nav-icon-button.active-nav {
+    color: var(--color-accent);
+    background-color: var(--color-muted);
+  }
+
+  /* ===== MOBILE MENU STYLES ===== */
+  
+  .mobile-menu-button {
+    position: relative;
+    padding: 0.5rem;
+    color: var(--color-foreground);
+    transition: all 200ms ease-out;
+    border-radius: 0.375rem;
+  }
+  
+  .mobile-menu-button:hover {
+    color: var(--color-accent);
+    background-color: var(--color-hover);
+  }
+  
+  .mobile-menu-button:focus-visible {
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .menu-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: all 300ms ease-out;
+  }
+
+  #mobile-nav {
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all var(--duration-normal) var(--ease-out);
+  }
+
+  #mobile-nav.mobile-nav-open {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .mobile-menu-items {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all var(--duration-slow) var(--ease-out);
+  }
+
+  .mobile-menu-items.mobile-menu-open {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-foreground);
+    transition: all 200ms;
+    border-left: 3px solid transparent;
+  }
+  
+  .mobile-nav-link:hover {
+    color: var(--color-accent);
+    background-color: var(--color-hover);
+  }
+  
+  .mobile-nav-link:focus-visible {
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .mobile-nav-link.active-nav {
+    color: var(--color-accent);
+    background-color: var(--color-muted);
+    border-left-color: var(--color-accent);
+  }
+
+  .mobile-nav-icon-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-foreground);
+    transition: all 200ms;
+    border-left: 3px solid transparent;
+  }
+  
+  .mobile-nav-icon-link:hover {
+    color: var(--color-accent);
+    background-color: var(--color-hover);
+  }
+  
+  .mobile-nav-icon-link:focus-visible {
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .mobile-nav-icon-link.active-nav {
+    color: var(--color-accent);
+    background-color: var(--color-muted);
+    border-left-color: var(--color-accent);
+  }
+
+  /* ===== ENHANCED ANIMATIONS ===== */
+  
+  /* Skip link enhanced styling */
+  #skip-to-content {
+    transform: translateY(-200%);
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+
+  #skip-to-content:focus {
+    transform: translateY(0);
+  }
+
+  /* Logo hover effect */
+  header a[aria-label*="Homepage"]:hover {
+    transform: scale(1.02);
+    transition: all var(--duration-fast) var(--ease-out);
+  }
+
+  /* ===== RESPONSIVE DESIGN ===== */
+  
+  @media (max-width: 639px) {
+    .mobile-menu-items li:not(:last-child) {
+      border-bottom: 1px solid rgb(var(--color-border) / 0.3);
+    }
+  }
+
+  /* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+  
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    
+    #mobile-nav,
+    .mobile-menu-items,
+    .nav-link:before {
+      transition: none;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .nav-link,
+    .mobile-nav-link,
+    .mobile-nav-icon-link {
+      border: 1px solid var(--color-border);
+    }
+    
+    .nav-link.active-nav,
+    .mobile-nav-link.active-nav,
+    .mobile-nav-icon-link.active-nav {
+      border-color: var(--color-accent);
+      background: var(--color-accent);
+      color: var(--color-background);
+    }
+  }
+
+  /* Focus styles for better visibility */
+  .focus-outline:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+</style>

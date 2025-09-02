@@ -1,0 +1,240 @@
+/* ===== BASE STYLES & CSS RESET ===== */
+
+/* Source: https://piccalil.li/blog/a-more-modern-css-reset/ */
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Prevent font size inflation */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Remove default margin in favour of better control in authored CSS */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* Set shorter line heights on headings and interactive elements */
+h1,
+h2,
+h3,
+h4,
+button,
+input,
+label {
+  line-height: 1.1;
+}
+
+/* Balance text wrapping on headings */
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  color: currentColor;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Make sure textareas without a rows attribute are not tiny */
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+/* Anything that has been anchored to should have extra scroll margin */
+:target {
+  scroll-margin-block: 5ex;
+}
+
+/* ===== BASE ELEMENT STYLES ===== */
+
+@layer base {
+  * {
+    @apply border-border outline-accent/75;
+    scrollbar-width: auto;
+    scrollbar-color: var(--color-muted) transparent;
+  }
+  
+  html {
+    @apply overflow-y-scroll scroll-smooth;
+    font-feature-settings: 
+      "cv02", /* Contextual alternates */
+      "cv03", /* Lower case a */
+      "cv04", /* Lower case g */
+      "cv11"; /* Single story a */
+  }
+  
+  body {
+    @apply flex min-h-svh flex-col bg-background font-mono text-foreground;
+    selection-background-color: var(--color-selection);
+    selection-color: var(--color-selection-foreground);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Selection styling */
+  ::selection {
+    background-color: var(--color-selection);
+    color: var(--color-selection-foreground);
+  }
+  
+  ::-moz-selection {
+    background-color: var(--color-selection);
+    color: var(--color-selection-foreground);
+  }
+  
+  /* Enhanced focus indicators for accessibility */
+  :focus-visible {
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 2px;
+  }
+  
+  /* Interactive elements */
+  a,
+  button {
+    @apply outline-offset-1 outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
+    transition: color 150ms ease-in-out, background-color 150ms ease-in-out;
+  }
+  
+  a:hover {
+    color: var(--color-accent);
+  }
+  
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  
+  button:hover:not(:disabled) {
+    background-color: var(--color-hover);
+  }
+  
+  button:active:not(:disabled) {
+    background-color: var(--color-active);
+  }
+  
+  /* Layout containers */
+  section,
+  footer {
+    @apply mx-auto max-w-app px-4;
+  }
+  
+  /* Enhanced scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--color-muted);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-2);
+  }
+  
+  /* Print styles */
+  @media print {
+    *,
+    *::before,
+    *::after {
+      background: transparent !important;
+      color: black !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+    
+    a,
+    a:visited {
+      text-decoration: underline;
+    }
+    
+    abbr[title]::after {
+      content: " (" attr(title) ")";
+    }
+    
+    pre {
+      white-space: pre-wrap !important;
+    }
+    
+    pre,
+    blockquote {
+      border: 1px solid #999;
+      page-break-inside: avoid;
+    }
+    
+    thead {
+      display: table-header-group;
+    }
+    
+    tr,
+    img {
+      page-break-inside: avoid;
+    }
+    
+    p,
+    h2,
+    h3 {
+      orphans: 3;
+      widows: 3;
+    }
+    
+    h2,
+    h3 {
+      page-break-after: avoid;
+    }
+  }
+}
