@@ -16,7 +16,7 @@ export interface Props {
   locale?: Language;
 }
 
-const { variant = "h2", data, id, locale = "en-US" } = Astro.props;
+const { variant = "h2", data, id, locale = "en" } = Astro.props;
 const { title, description, pubDatetime, modDatetime, timezone } = data;
 
 // Generate proper URL using the standardized i18n utility

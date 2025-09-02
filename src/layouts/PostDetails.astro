@@ -57,7 +57,7 @@ const ogImage = ogImageUrl
   : undefined;
 
 // Get the current language from Astro.locals or detect from the locale
-const currentLanguage = Astro.locals.currentLanguage || (post.data.locale || 'en-US');
+const currentLanguage = Astro.locals.currentLanguage || (post.data.locale || 'en');
 
 const layoutProps = {
   title: `${title} | ${SITE.title}`,

@@ -13,13 +13,10 @@ export const getStaticPaths = (() => {
   const paths = [];
   
   for (const language of SUPPORTED_LANGUAGES) {
-    // Only add the route for pt-BR since en-US is handled by pages/search.astro (prefixDefaultLocale: false)
-    if (language === 'pt-BR') {
-      paths.push({
-        params: { locale: language },
-        props: { locale: language }
-      });
-    }
+    paths.push({
+      params: { locale: language },
+      props: { locale: language }
+    });
   }
   
   return paths;
@@ -30,13 +27,13 @@ const currentLocale = locale as Language;
 // Set current language in Astro.locals
 Astro.locals.currentLanguage = currentLocale;
 
-const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : (currentLocale === 'en-US' ? '/' : '/pt-BR/');
+const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : (currentLocale === 'en' ? '/en/' : '/pt/');
 ---
 
 <Layout title={`${t(currentLocale, 'search')} | ${SITE.title}`} lang={currentLocale}>
   <Header />
   <Main pageTitle={t(currentLocale, 'search')} pageDesc={t(currentLocale, 'searchDescription')}>
-    <div id="pagefind-search" transition:persist data-backurl={backUrl} data-locale={currentLocale} data-language={currentLocale === 'en-US' ? 'en' : 'pt'}></div>
+    <div id="pagefind-search" transition:persist data-backurl={backUrl} data-locale={currentLocale} data-language={currentLocale}></div>
   </Main>
   <Footer />
 </Layout>

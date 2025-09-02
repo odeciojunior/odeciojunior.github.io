@@ -13,12 +13,12 @@ import {
 export type { Language } from '../config';
 
 // Import translations
-import enUS from '../locales/en-US.json';
-import ptBR from '../locales/pt-BR.json';
+import en from '../locales/en.json';
+import pt from '../locales/pt.json';
 
 const translations = {
-  'en-US': enUS,
-  'pt-BR': ptBR,
+  'en': en,
+  'pt': pt,
 } as const;
 
 /**
@@ -122,7 +122,7 @@ export function getAvailableLanguages() {
  * Get the opposite language (useful for language switcher)
  */
 export function getAlternativeLanguage(currentLang: Language): Language {
-  return currentLang === 'en-US' ? 'pt-BR' : 'en-US';
+  return currentLang === 'en' ? 'pt' : 'en';
 }
 
 /**
@@ -143,8 +143,10 @@ export function getAlternateURLs(pathname: string): Record<Language, string> {
 export function formatDate(date: Date | string, lang: Language, options?: Intl.DateTimeFormatOptions): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   const formatOptions = options || DATE_FORMATS[lang];
+  // Map short codes to full locale codes for Intl
+  const localeCode = lang === 'en' ? 'en-US' : 'pt-BR';
   
-  return new Intl.DateTimeFormat(lang, formatOptions).format(dateObj);
+  return new Intl.DateTimeFormat(localeCode, formatOptions).format(dateObj);
 }
 
 /**
@@ -152,8 +154,10 @@ export function formatDate(date: Date | string, lang: Language, options?: Intl.D
  */
 export function formatNumber(number: number, lang: Language, options?: Intl.NumberFormatOptions): string {
   const formatOptions = options || NUMBER_FORMATS[lang];
+  // Map short codes to full locale codes for Intl
+  const localeCode = lang === 'en' ? 'en-US' : 'pt-BR';
   
-  return new Intl.NumberFormat(lang, formatOptions).format(number);
+  return new Intl.NumberFormat(localeCode, formatOptions).format(number);
 }
 
 /**
@@ -285,7 +289,7 @@ export function generateLocalizedPath(path: string, lang: Language): string {
   const cleanPath = removeLanguagePrefix(path);
   
   // Both languages now use prefixes with prefixDefaultLocale: true
-  const langPrefix = lang === 'pt-BR' ? '/pt' : '/en';
+  const langPrefix = LOCALE_PATHS[lang];
   
   return `${langPrefix}${cleanPath === '/' ? '' : cleanPath}`;
 }

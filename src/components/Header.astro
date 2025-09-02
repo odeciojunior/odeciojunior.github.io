@@ -21,11 +21,11 @@ const currentPath =
 const isActive = (path: string) => {
   // For English (default), compare directly
   // For Portuguese, skip the locale segment for comparison
-  if (currentLanguage === 'en-US') {
+  if (currentLanguage === 'en') {
     return currentPath === path || currentPath.startsWith(path + '/');
   } else {
-    const currentWithoutLocale = currentPath.replace(/^\/pt-BR/, '') || '/';
-    const pathWithoutLocale = path.replace(/^\/pt-BR/, '') || '/';
+    const currentWithoutLocale = currentPath.replace(/^\/pt/, '') || '/';
+    const pathWithoutLocale = path.replace(/^\/pt/, '') || '/';
     return currentWithoutLocale === pathWithoutLocale || currentWithoutLocale.startsWith(pathWithoutLocale + '/');
   }
 };

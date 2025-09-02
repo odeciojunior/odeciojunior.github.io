@@ -8,7 +8,7 @@ export interface Props {
   locale?: Language;
 }
 
-const { centered = false, locale = "en-US" } = Astro.props;
+const { centered = false, locale = "en" } = Astro.props;
 const t = createTranslator(locale);
 ---
 

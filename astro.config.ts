@@ -15,8 +15,8 @@ import { SITE } from "./src/config";
 export default defineConfig({
   site: "https://odeciojunior.github.io",
   i18n: {
-    defaultLocale: "en-US",
-    locales: ["en-US", "pt-BR"],
+    defaultLocale: "en",
+    locales: ["en", "pt"],
     routing: {
       prefixDefaultLocale: true
     }

@@ -8,7 +8,7 @@ export interface Props {
   locale?: Language;
 }
 
-const { noMarginTop = false, locale = "en-US" } = Astro.props;
+const { noMarginTop = false, locale = "en" } = Astro.props;
 const t = createTranslator(locale);
 const currentYear = new Date().getFullYear();
 ---

@@ -20,7 +20,7 @@ export const getStaticPaths = (() => {
   const paths = [];
   
   for (const language of SUPPORTED_LANGUAGES) {
-    // Now both languages need routes since both have prefixes (prefixDefaultLocale: true)
+    // Languages are now short codes (en, pt)
     paths.push({
       params: { locale: language },
       props: { locale: language }

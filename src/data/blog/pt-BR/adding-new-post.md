@@ -9,10 +9,10 @@ draft: false
 tags:
   - docs
   - tutorial
-locale: pt-BR
+locale: pt
 language: pt
 alternates:
-  en-US: adding-new-posts-in-astropaper-theme
+  en: adding-new-posts-in-astropaper-theme
 description:
   Algumas regras e recomendações para criar ou adicionar novos posts usando o tema AstroPaper.
 ---

@@ -12,8 +12,6 @@ export const getStaticPaths = (async () => {
   const paths = [];
 
   for (const language of SUPPORTED_LANGUAGES) {
-    const shortLocale = language === 'en-US' ? 'en' : language === 'pt-BR' ? 'pt' : language;
-    
     // Get posts for this locale
     const localePosts = sortedPosts.filter(post => {
       if (post.data.locale) {
@@ -23,19 +21,7 @@ export const getStaticPaths = (async () => {
     });
 
     for (const post of localePosts) {
-      // Add path with short locale (en, pt)
-      paths.push({
-        params: { 
-          locale: shortLocale,
-          slug: post.id 
-        },
-        props: { 
-          post,
-          locale: language
-        }
-      });
-      
-      // Add path with full locale (en-US, pt-BR)
+      // Add path with locale
       paths.push({
         params: { 
           locale: language,

@@ -11,13 +11,10 @@ export const getStaticPaths = (() => {
   const paths = [];
   
   for (const language of SUPPORTED_LANGUAGES) {
-    // Only add the route for pt-BR since en-US is handled by pages/404.astro (prefixDefaultLocale: false)
-    if (language === 'pt-BR') {
-      paths.push({
-        params: { locale: language },
-        props: { locale: language }
-      });
-    }
+    paths.push({
+      params: { locale: language },
+      props: { locale: language }
+    });
   }
   
   return paths;

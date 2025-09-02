@@ -12,10 +12,10 @@ tags:
   - development
   - productivity
   - trap
-locale: en-US
+locale: en
 language: en
 alternates:
-  pt-BR: vibe-trap-analise-critica-vibe-coding-desenvolvimento-ia
+  pt: vibe-trap-analise-critica-vibe-coding-desenvolvimento-ia
 ogImage: "../../../../assets/images/vibe_trap.png"
 description: A critical examination of vibe coding and its implications for AI-assisted development.
 canonicalURL: https://blog.odeciomachado.com/code/vibe-trap-critical-review-vibe-coding-ai-development

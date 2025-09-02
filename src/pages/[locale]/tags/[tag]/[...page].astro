@@ -18,8 +18,6 @@ export const getStaticPaths = (async ({ paginate }) => {
   const paths = [];
 
   for (const language of SUPPORTED_LANGUAGES) {
-    const shortLocale = language === 'en-US' ? 'en' : language === 'pt-BR' ? 'pt' : language;
-    
     // Filter posts by locale
     const localePosts = posts.filter(post => {
       if (post.data.locale) {
@@ -33,19 +31,8 @@ export const getStaticPaths = (async ({ paginate }) => {
     for (const { tag } of tags) {
       const tagPosts = getPostsByTag(localePosts, tag);
       
-      // Add pagination for short locale paths (en, pt)
-      const shortPaginatedPosts = paginate(tagPosts, {
-        params: { locale: shortLocale, tag },
-        pageSize: SITE.postPerPage,
-        props: { 
-          locale: language,
-          tag,
-          tagName: tag
-        }
-      });
-      
-      // Add pagination for full locale paths (en-US, pt-BR)
-      const fullPaginatedPosts = paginate(tagPosts, {
+      // Add pagination with locale paths
+      const paginatedPosts = paginate(tagPosts, {
         params: { locale: language, tag },
         pageSize: SITE.postPerPage,
         props: { 
@@ -55,7 +42,7 @@ export const getStaticPaths = (async ({ paginate }) => {
         }
       });
 
-      paths.push(...shortPaginatedPosts, ...fullPaginatedPosts);
+      paths.push(...paginatedPosts);
     }
   }
 
@@ -64,7 +51,6 @@ export const getStaticPaths = (async ({ paginate }) => {
 
 const { page, locale, tagName } = Astro.props;
 const currentLocale = locale as Language;
-const localeSlug = currentLocale === 'en-US' ? 'en' : currentLocale === 'pt-BR' ? 'pt' : currentLocale;
 
 // Set current language in Astro.locals
 Astro.locals.currentLanguage = currentLocale;

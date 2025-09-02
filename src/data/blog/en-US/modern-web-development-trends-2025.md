@@ -10,10 +10,10 @@ tags:
   - trends
   - frontend
   - backend
-locale: en-US
+locale: en
 language: en
 alternates:
-  pt-BR: tendencias-desenvolvimento-web-2025
+  pt: tendencias-desenvolvimento-web-2025
 description: Explore the latest trends shaping web development in 2025, from AI integration to new frameworks.
 ---
 

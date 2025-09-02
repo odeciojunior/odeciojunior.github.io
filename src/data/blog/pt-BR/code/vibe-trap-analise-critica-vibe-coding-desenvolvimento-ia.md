@@ -12,10 +12,10 @@ tags:
   - desenvolvimento
   - produtividade
   - armadilha
-locale: pt-BR
+locale: pt
 language: pt
 alternates:
-  en-US: vibe-trap-critical-review-vibe-coding-ai-development
+  en: vibe-trap-critical-review-vibe-coding-ai-development
 ogImage: "../../../../assets/images/vibe_trap.png"
 description: Uma análise crítica do vibe coding e suas implicações para o desenvolvimento assistido por IA.
 canonicalURL: https://blog.odeciomachado.com/code/vibe-trap-analise-critica-vibe-coding-desenvolvimento-ia

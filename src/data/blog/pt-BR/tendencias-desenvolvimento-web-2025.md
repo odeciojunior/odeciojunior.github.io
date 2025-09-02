@@ -10,10 +10,10 @@ tags:
   - tendencias
   - frontend
   - backend
-locale: pt-BR
+locale: pt
 language: pt
 alternates:
-  en-US: modern-web-development-trends-2025
+  en: modern-web-development-trends-2025
 description: Explore as últimas tendências que estão moldando o desenvolvimento web em 2025, desde integração com IA até novos frameworks.
 ---
 

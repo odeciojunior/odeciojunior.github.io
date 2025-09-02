@@ -82,7 +82,7 @@ export function i18nMiddleware(request: Request): Response | void {
     const detectedLang = detectLanguage(pathname);
     
     // Redirect to appropriate language prefix
-    const langPrefix = detectedLang === 'pt-BR' ? '/pt' : '/en';
+    const langPrefix = detectedLang === 'pt' ? '/pt' : '/en';
     
     return new Response(null, {
       status: 302, // Temporary redirect for language detection
@@ -98,7 +98,7 @@ export function i18nMiddleware(request: Request): Response | void {
     const detectedLang = detectLanguage(pathname);
     
     // Redirect to appropriate language prefix
-    const langPrefix = detectedLang === 'pt-BR' ? '/pt' : '/en';
+    const langPrefix = detectedLang === 'pt' ? '/pt' : '/en';
     const newPathname = `${langPrefix}${pathname}`;
     
     return new Response(null, {
@@ -115,7 +115,7 @@ export function i18nMiddleware(request: Request): Response | void {
     const detectedLang = detectLanguage(pathname);
     
     // Redirect to appropriate language prefix
-    const langPrefix = detectedLang === 'pt-BR' ? '/pt' : '/en';
+    const langPrefix = detectedLang === 'pt' ? '/pt' : '/en';
     const newPathname = `${langPrefix}${pathname}`;
     
     return new Response(null, {
@@ -197,7 +197,7 @@ export function getCanonicalURL(
   lang: Language
 ): string {
   const cleanPath = pathname.replace(/^\/[a-z]{2}(-[A-Z]{2})?/, '') || '/';
-  const langPrefix = lang === 'pt-BR' ? '/pt' : '/en';
+  const langPrefix = lang === 'pt' ? '/pt' : '/en';
   
   return `${baseURL}${langPrefix}${cleanPath === '/' ? '' : cleanPath}`;
 }
@@ -230,8 +230,8 @@ export function getHreflangLinks(
  */
 export function getOGLocale(lang: Language): string {
   const localeMap: Record<Language, string> = {
-    'en-US': 'en_US',
-    'pt-BR': 'pt_BR',
+    'en': 'en_US',
+    'pt': 'pt_BR',
   };
   
   return localeMap[lang] || 'en_US';
