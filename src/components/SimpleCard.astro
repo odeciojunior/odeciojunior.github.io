@@ -19,7 +19,11 @@ export interface Props {
 const { variant = "h2", data, id, locale = "en-US" } = Astro.props;
 const { title, description, pubDatetime, modDatetime, timezone } = data;
 
-const localeSlug = locale === 'en-US' ? 'en' : locale === 'pt-BR' ? 'pt' : locale;
+// Generate proper URL from slug - handle both simple slugs and directory-based slugs
+const generatePostUrl = (slug: string, locale: string) => {
+  const localePrefix = locale === 'en-US' ? '/en' : locale === 'pt-BR' ? '/pt' : `/${locale}`;
+  return `${localePrefix}/posts/${slug}/`;
+};
 
 const headerProps = {
   style: { viewTransitionName: slugifyStr(title) },
@@ -29,7 +33,7 @@ const headerProps = {
 
 <li class="my-6">
   <a
-    href={`/${localeSlug}/posts/${id}/`}
+    href={generatePostUrl(id, locale)}
     class="inline-block text-lg font-medium text-accent decoration-dashed underline-offset-4 focus-visible:no-underline focus-visible:underline-offset-0"
   >
     {

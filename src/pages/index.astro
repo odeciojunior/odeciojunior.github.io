@@ -69,7 +69,7 @@ const recentPosts = sortedPosts.filter(post => !post.data.featured);
             <ul>
               {featuredPosts.map(post => (
                 <SimpleCard
-                  id={post.slug}
+                  id={post.id}
                   data={post.data}
                   variant="h2"
                   locale={currentLanguage}
@@ -89,7 +89,7 @@ const recentPosts = sortedPosts.filter(post => !post.data.featured);
           <ul>
             {recentPosts.slice(0, 4).map(post => (
               <SimpleCard
-                id={post.slug}
+                id={post.id}
                 data={post.data}
                 variant="h3"
                 locale={currentLanguage}
